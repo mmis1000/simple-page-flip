@@ -1,0 +1,78 @@
+html {
+  background: #aaa;
+}
+
+.wrap {
+  height: 100px;
+  width: 100px;
+  margin: 4rem;
+  margin-right: calc(100px + 4rem);
+  display: inline-block;
+  border: 1px solid red;
+  position: relative;
+}
+.item-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.item-wrap {
+  transform-origin: 0 0;
+}
+
+.item {
+  height: 100px;
+  width: 100px;
+  background: #7777ff;
+}
+
+
+.sample-book.wrap {
+  height: 400px;
+  width: 300px;
+  margin-right: calc(300px + 4rem);
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+.sample-book .item {
+  height: 400px;
+  width: 300px;
+}
+
+
+.sample-book2.wrap {
+  height: 400px;
+  width: 300px;
+  margin-left: calc(300px + 4rem);
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+.sample-book2 .item {
+  height: 400px;
+  width: 300px;
+}
+
+.sample-book3.wrap {
+  height: 400px;
+  width: 300px;
+  margin-right: calc(300px + 4rem);
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+.sample-book3 .item {
+  height: 400px;
+  width: 300px;
+}
+
+.sample-book4.wrap {
+  height: 400px;
+  width: 300px;
+  margin-left: calc(300px + 4rem);
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+.sample-book4 .item {
+  height: 400px;
+  width: 300px;
+}
