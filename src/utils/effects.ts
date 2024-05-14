@@ -31,6 +31,10 @@ export const getEffectLeftTop = (
 
   const polygon = [posTop, posLeft, pos(0, 0)];
 
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+
   let newPolygin =
     leftOffset >= topOffset
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
@@ -74,12 +78,13 @@ export const getEffectLeftTop = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
+    clipPathFlipShadow,
     clipPathFlip,
     boxShadow,
     transform
@@ -113,6 +118,10 @@ export const getEffectRightTop = (
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posRight, pos(width, 0)];
+
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
 
   let newPolygin =
     rightOffset >= (width - topOffset)
@@ -157,13 +166,14 @@ export const getEffectRightTop = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
     clipPathFlip,
+    clipPathFlipShadow,
     boxShadow,
     transform
   };
@@ -197,6 +207,9 @@ export const getEffectLeft = (
   )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, pos(0, 0), pos(0, height), posBottom];
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
 
   let newPolygin =
     topOffset > bottomOffset
@@ -245,12 +258,13 @@ export const getEffectLeft = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
+    clipPathFlipShadow,
     clipPathFlip,
     boxShadow,
     transform
@@ -285,6 +299,10 @@ export const getEffectRight = (
   )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, pos(width, 0), pos(width, height), posBottom];
+
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
 
   let newPolygin =
     width - topOffset > width - bottomOffset
@@ -333,12 +351,13 @@ export const getEffectRight = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
+    clipPathFlipShadow,
     clipPathFlip,
     boxShadow,
     transform
@@ -372,6 +391,10 @@ export const getEffectLeftBottom = (
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posBottom, posLeft, pos(0, height)];
+
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
 
   let newPolygin =
     height - leftOffset >= bottomOffset
@@ -416,13 +439,14 @@ export const getEffectLeftBottom = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
     clipPathFlip,
+    clipPathFlipShadow,
     boxShadow,
     transform
   };
@@ -455,6 +479,10 @@ export const getEffectRightBottom = (
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posRight, pos(width, height)];
+
+  const clipPathFlip = `polygon(${polygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
 
   let newPolygin =
     height - rightOffset >= (width - bottomOffset)
@@ -499,13 +527,14 @@ export const getEffectRightBottom = (
     );
   }
 
-  const clipPathFlip = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygin
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
   return {
     clipPathRemain,
     clipPathFlip,
+    clipPathFlipShadow,
     boxShadow,
     transform
   };

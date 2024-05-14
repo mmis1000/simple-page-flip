@@ -76,3 +76,15 @@ html {
   height: 400px;
   width: 300px;
 }
+.layer-shadow .item {
+  background: transparent !important;
+}
+.layer-shadow {
+  filter: blur(2px);
+}
+
+.colorStrip {
+  width: 100px;
+  height: 100px;
+  background: red;
+}

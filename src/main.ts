@@ -8,8 +8,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="item">Text Text Text Text </div>
     </div>
   </div>
+  <div class="item-mask layer-shadow">
+    <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
+    </div>
+  </div>
   <div class="item-mask">
-    <div class="item-wrap transformed-front shadowed-front masked-front">
+    <div class="item-wrap transformed-front masked-front">
       <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
     </div>
   </div>
@@ -20,8 +25,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="item">Text Text Text Text </div>
     </div>
   </div>
+  <div class="item-mask layer-shadow">
+    <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
+    </div>
+  </div>
   <div class="item-mask">
-    <div class="item-wrap transformed-front shadowed-front masked-front">
+    <div class="item-wrap transformed-front masked-front">
       <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
     </div>
   </div>
@@ -32,8 +42,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="item">Text Text Text Text </div>
     </div>
   </div>
+  <div class="item-mask layer-shadow">
+    <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
+    </div>
+  </div>
   <div class="item-mask">
-    <div class="item-wrap transformed-front shadowed-front masked-front">
+    <div class="item-wrap transformed-front masked-front">
       <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
     </div>
   </div>
@@ -44,8 +59,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="item">Text Text Text Text </div>
     </div>
   </div>
+  <div class="item-mask layer-shadow">
+    <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
+    </div>
+  </div>
   <div class="item-mask">
-    <div class="item-wrap transformed-front shadowed-front masked-front">
+    <div class="item-wrap transformed-front masked-front">
       <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
     </div>
   </div>
@@ -58,7 +78,7 @@ const updateDemoBook = (progress: number) => {
   const SHADOW = 30
   const ROOT = ".sample-book";
 
-  let clipPathRemain: any, clipPathFlip: any, boxShadow: any, transform: any;
+  let clipPathRemain: any, clipPathFlip: any, clipPathFlipShadow: any, boxShadow: any, transform: any;
 
   // progress = 0.9999999925888101
 
@@ -116,7 +136,7 @@ const updateDemoBook = (progress: number) => {
   for (let item of points) {
     if (item[0] <= progress && progress <= item[1]) {
       const fullProgress = (progress - item[0]) / (item[1] - item[0])
-      ;({ clipPathRemain, clipPathFlip, boxShadow, transform } = item[2](fullProgress))
+      ;({ clipPathRemain, clipPathFlip, clipPathFlipShadow, boxShadow, transform } = item[2](fullProgress))
       break
     }
   }
@@ -128,6 +148,9 @@ const updateDemoBook = (progress: number) => {
   );
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")).forEach((i) => {
     i.style.clipPath = clipPathRemain;
+  });
+  Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")).forEach((i) => {
+    i.style.clipPath = clipPathFlipShadow;
   });
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")).forEach(
     (i) => {
@@ -147,7 +170,7 @@ const updateDemoBook2 = (progress: number) => {
   const SHADOW = 30
   const ROOT = ".sample-book2";
 
-  let clipPathRemain: any, clipPathFlip: any, boxShadow: any, transform: any;
+  let clipPathRemain: any, clipPathFlip: any, clipPathFlipShadow: any, boxShadow: any, transform: any;
 
   // progress = 0.9999999925888101
 
@@ -205,7 +228,7 @@ const updateDemoBook2 = (progress: number) => {
   for (let item of points) {
     if (item[0] <= progress && progress <= item[1]) {
       const fullProgress = (progress - item[0]) / (item[1] - item[0])
-      ;({ clipPathRemain, clipPathFlip, boxShadow, transform } = item[2](fullProgress))
+      ;({ clipPathRemain, clipPathFlip, clipPathFlipShadow, boxShadow, transform } = item[2](fullProgress))
       break
     }
   }
@@ -217,6 +240,9 @@ const updateDemoBook2 = (progress: number) => {
   );
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")).forEach((i) => {
     i.style.clipPath = clipPathRemain;
+  });
+  Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")).forEach((i) => {
+    i.style.clipPath = clipPathFlipShadow;
   });
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")).forEach(
     (i) => {
@@ -236,7 +262,7 @@ const updateDemoBook3 = (progress: number) => {
   const SHADOW = 30
   const ROOT = ".sample-book3";
 
-  let clipPathRemain: any, clipPathFlip: any, boxShadow: any, transform: any;
+  let clipPathRemain: any, clipPathFlip: any, clipPathFlipShadow: any, boxShadow: any, transform: any;
 
   // progress = 0.9999999925888101
 
@@ -294,7 +320,7 @@ const updateDemoBook3 = (progress: number) => {
   for (let item of points) {
     if (item[0] <= progress && progress <= item[1]) {
       const fullProgress = (progress - item[0]) / (item[1] - item[0])
-      ;({ clipPathRemain, clipPathFlip, boxShadow, transform } = item[2](fullProgress))
+      ;({ clipPathRemain, clipPathFlip, clipPathFlipShadow, boxShadow, transform } = item[2](fullProgress))
       break
     }
   }
@@ -306,6 +332,9 @@ const updateDemoBook3 = (progress: number) => {
   );
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")).forEach((i) => {
     i.style.clipPath = clipPathRemain;
+  });
+  Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")).forEach((i) => {
+    i.style.clipPath = clipPathFlipShadow;
   });
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")).forEach(
     (i) => {
@@ -325,7 +354,7 @@ const updateDemoBook4 = (progress: number) => {
   const SHADOW = 30
   const ROOT = ".sample-book4";
 
-  let clipPathRemain: any, clipPathFlip: any, boxShadow: any, transform: any;
+  let clipPathRemain: any, clipPathFlip: any, clipPathFlipShadow: any, boxShadow: any, transform: any;
 
   // progress = 0.9999999925888101
 
@@ -383,7 +412,7 @@ const updateDemoBook4 = (progress: number) => {
   for (let item of points) {
     if (item[0] <= progress && progress <= item[1]) {
       const fullProgress = (progress - item[0]) / (item[1] - item[0])
-      ;({ clipPathRemain, clipPathFlip, boxShadow, transform } = item[2](fullProgress))
+      ;({ clipPathRemain, clipPathFlip, clipPathFlipShadow, boxShadow, transform } = item[2](fullProgress))
       break
     }
   }
@@ -395,6 +424,9 @@ const updateDemoBook4 = (progress: number) => {
   );
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")).forEach((i) => {
     i.style.clipPath = clipPathRemain;
+  });
+  Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")).forEach((i) => {
+    i.style.clipPath = clipPathFlipShadow;
   });
   Array.from(document.querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")).forEach(
     (i) => {
@@ -410,7 +442,7 @@ const updateDemoBook4 = (progress: number) => {
 
 const fpxRatio = 1;
 
-const duration = 40000 * fpxRatio;
+const duration = 4000 * fpxRatio;
 const start = Date.now();
 
 let i = 0;
