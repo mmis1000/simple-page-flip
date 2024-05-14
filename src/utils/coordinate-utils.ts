@@ -316,3 +316,8 @@ export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number
   result.splice(targetPoint, 1, pos(newPointA[0], newPointA[1]), pos(newPointB[0], newPointB[1]));
   return result;
 }
+export function toClipPath(poss: Pos[]) {
+  return `polygon(${poss
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+}

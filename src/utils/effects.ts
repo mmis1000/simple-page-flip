@@ -1,8 +1,21 @@
-import { pos, genReflectMatrix, toCSSMatrix, toCSSNumber, expandPolygon, insertLineToPolygon, line, applyReverseTransform, posAdd, applyTransform, genMatrix, Pos } from "./coordinate-utils";
-import * as glMatrix from 'gl-matrix'
+import {
+  pos,
+  genReflectMatrix,
+  toCSSMatrix,
+  toCSSNumber,
+  expandPolygon,
+  insertLineToPolygon,
+  line,
+  applyReverseTransform,
+  posAdd,
+  applyTransform,
+  genMatrix,
+  Pos,
+  toClipPath,
+} from "./coordinate-utils";
+import * as glMatrix from "gl-matrix";
 
-
-const SHADOW_SIZE_TOLERANCE = 1.3
+const SHADOW_SIZE_TOLERANCE = 1.3;
 
 export const getEffectLeftTop = (
   width: number,
@@ -21,21 +34,17 @@ export const getEffectLeftTop = (
     posLeft,
     pos(0, height),
     pos(width, height),
-    pos(width, 0)
+    pos(width, 0),
   ];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
   const boxShadowWidth = Math.min(leftOffset, topOffset, maxShadowWidth);
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posLeft, pos(0, 0)];
 
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
     leftOffset >= topOffset
@@ -80,17 +89,12 @@ export const getEffectLeftTop = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    -1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(-1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -99,19 +103,19 @@ export const getEffectLeftTop = (
     applyTransform(posTop, matrixRaw),
     applyTransform(posLeft, matrixRaw),
     applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathEffect = toClipPath(effectPolygon);
 
   return {
     clipPathRemain,
@@ -120,7 +124,7 @@ export const getEffectLeftTop = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
 export const getEffectRightTop = (
@@ -140,24 +144,24 @@ export const getEffectRightTop = (
     posRight,
     pos(width, height),
     pos(0, height),
-    pos(0, 0)
+    pos(0, 0),
   ];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
-  const boxShadowWidth = Math.min(rightOffset, width - topOffset, maxShadowWidth);
+  const boxShadowWidth = Math.min(
+    rightOffset,
+    width - topOffset,
+    maxShadowWidth
+  );
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posRight, pos(width, 0)];
 
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
-    rightOffset >= (width - topOffset)
+    rightOffset >= width - topOffset
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
@@ -173,7 +177,7 @@ export const getEffectRightTop = (
     0
   );
 
-  if (rightOffset >= (width - topOffset)) {
+  if (rightOffset >= width - topOffset) {
     newPolygon = insertLineToPolygon(
       newPolygon,
       line(
@@ -199,17 +203,12 @@ export const getEffectRightTop = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -218,20 +217,20 @@ export const getEffectRightTop = (
     applyTransform(posTop, matrixRaw),
     applyTransform(posRight, matrixRaw),
     applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
-  
+  const clipPathEffect = toClipPath(effectPolygon);
+
   return {
     clipPathRemain,
     clipPathFlip,
@@ -239,7 +238,7 @@ export const getEffectRightTop = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
 export const getEffectLeft = (
@@ -256,9 +255,7 @@ export const getEffectLeft = (
 
   const polygonRemain = [posTop, pos(width, 0), pos(width, height), posBottom];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
   const boxShadowWidth = Math.min(
     Math.max(topOffset, bottomOffset),
@@ -271,9 +268,7 @@ export const getEffectLeft = (
   )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, pos(0, 0), pos(0, height), posBottom];
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
     topOffset > bottomOffset
@@ -322,17 +317,12 @@ export const getEffectLeft = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    -1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(-1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -341,19 +331,19 @@ export const getEffectLeft = (
     applyTransform(posTop, matrixRaw),
     applyTransform(posBottom, matrixRaw),
     applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathEffect = toClipPath(effectPolygon);
 
   return {
     clipPathRemain,
@@ -362,7 +352,7 @@ export const getEffectLeft = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
 export const getEffectRight = (
@@ -379,9 +369,7 @@ export const getEffectRight = (
 
   const polygonRemain = [posTop, pos(0, 0), pos(0, height), posBottom];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
   const boxShadowWidth = Math.min(
     Math.max(width - topOffset, width - bottomOffset),
@@ -395,9 +383,7 @@ export const getEffectRight = (
 
   const polygon = [posTop, pos(width, 0), pos(width, height), posBottom];
 
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
     width - topOffset > width - bottomOffset
@@ -446,17 +432,12 @@ export const getEffectRight = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -465,20 +446,20 @@ export const getEffectRight = (
     applyTransform(posTop, matrixRaw),
     applyTransform(posBottom, matrixRaw),
     applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
-  
+  const clipPathEffect = toClipPath(effectPolygon);
+
   return {
     clipPathRemain,
     clipPathFlipShadow,
@@ -486,7 +467,7 @@ export const getEffectRight = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
 export const getEffectLeftBottom = (
@@ -506,21 +487,21 @@ export const getEffectLeftBottom = (
     posLeft,
     pos(0, 0),
     pos(width, 0),
-    pos(width, height)
+    pos(width, height),
   ];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
-  const boxShadowWidth = Math.min(height - leftOffset, bottomOffset, maxShadowWidth);
+  const boxShadowWidth = Math.min(
+    height - leftOffset,
+    bottomOffset,
+    maxShadowWidth
+  );
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posBottom, posLeft, pos(0, height)];
 
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
     height - leftOffset >= bottomOffset
@@ -565,17 +546,12 @@ export const getEffectLeftBottom = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    -1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(-1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -584,19 +560,19 @@ export const getEffectLeftBottom = (
     applyTransform(posLeft, matrixRaw),
     applyTransform(posBottom, matrixRaw),
     applyTransform(posAdd(posBottom, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathEffect = toClipPath(effectPolygon);
 
   return {
     clipPathRemain,
@@ -605,7 +581,7 @@ export const getEffectLeftBottom = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
 export const getEffectRightBottom = (
@@ -625,24 +601,24 @@ export const getEffectRightBottom = (
     posRight,
     pos(width, 0),
     pos(0, 0),
-    pos(0, height)
+    pos(0, height),
   ];
 
-  const clipPathRemain = `polygon(${polygonRemain
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathRemain = toClipPath(polygonRemain);
 
-  const boxShadowWidth = Math.min(height - rightOffset, width - bottomOffset, maxShadowWidth);
+  const boxShadowWidth = Math.min(
+    height - rightOffset,
+    width - bottomOffset,
+    maxShadowWidth
+  );
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posBottom, posRight, pos(width, height)];
 
-  const clipPathFlip = `polygon(${polygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlip = toClipPath(polygon);
 
   let newPolygon =
-    height - rightOffset >= (width - bottomOffset)
+    height - rightOffset >= width - bottomOffset
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
@@ -658,7 +634,7 @@ export const getEffectRightBottom = (
     0
   );
 
-  if (height - rightOffset >= (width - bottomOffset)) {
+  if (height - rightOffset >= width - bottomOffset) {
     newPolygon = insertLineToPolygon(
       newPolygon,
       line(
@@ -684,17 +660,12 @@ export const getEffectRightBottom = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathFlipShadow = toClipPath(newPolygon);
 
-  const posVector = glMatrix.vec2.fromValues(
-    1,
-    0
-  )
+  const posVector = glMatrix.vec2.fromValues(1, 0);
 
-  glMatrix.vec2.normalize(posVector, posVector)
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+  glMatrix.vec2.normalize(posVector, posVector);
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -703,19 +674,19 @@ export const getEffectRightBottom = (
     applyTransform(posRight, matrixRaw),
     applyTransform(posBottom, matrixRaw),
     applyTransform(posAdd(posBottom, posVector as Pos), matrixRaw)
-  )
+  );
 
-  const transformEffect = toCSSMatrix(matrixEffect)
+  const transformEffect = toCSSMatrix(matrixEffect);
 
-  const effectPolygon = polygon.map(i => {
-    return applyTransform(i, matrixRaw)
-  }).map(i => {
-    return applyReverseTransform(i, matrixEffect)
-  })
+  const effectPolygon = polygon
+    .map((i) => {
+      return applyTransform(i, matrixRaw);
+    })
+    .map((i) => {
+      return applyReverseTransform(i, matrixEffect);
+    });
 
-  const clipPathEffect = `polygon(${effectPolygon
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
-    .join(", ")})`;
+  const clipPathEffect = toClipPath(effectPolygon);
 
   return {
     clipPathRemain,
@@ -724,6 +695,6 @@ export const getEffectRightBottom = (
     clipPathEffect,
     boxShadow,
     transform,
-    transformEffect
+    transformEffect,
   };
 };
