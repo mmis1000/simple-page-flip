@@ -2,6 +2,7 @@ import './style.css'
 import { getEffectLeft, getEffectLeftBottom, getEffectLeftTop, getEffectRight, getEffectRightBottom, getEffectRightTop } from './utils/effects.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+<button id="toggle">pause/play</button>
 <div class="wrap sample-book">
   <div class="item-mask">
     <div class="item-wrap masked-back">
@@ -447,6 +448,8 @@ const start = Date.now();
 
 let i = 0;
 
+let id: ReturnType<typeof requestAnimationFrame> | null = null 
+
 const tick = () => {
   i++;
 
@@ -460,7 +463,16 @@ const tick = () => {
     updateDemoBook3(progress)
     updateDemoBook4(progress)
   }
-  requestAnimationFrame(tick);
+  id = requestAnimationFrame(tick);
 };
 
-requestAnimationFrame(tick);
+id = requestAnimationFrame(tick);
+
+document.getElementById('toggle')?.addEventListener('click', () => {
+  if (id == null) {
+    id = requestAnimationFrame(tick);
+  } else {
+    cancelAnimationFrame(id)
+    id = null
+  }
+})
