@@ -1,5 +1,6 @@
 import "./style.css";
 import {
+  EffectStyle,
   getEffectLeft,
   getEffectLeftBottom,
   getEffectLeftTop,
@@ -120,12 +121,13 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 </div>
 `;
 
-const updateDemoBook = (progress: number) => {
-  const WIDTH = 300;
-  const HEIGHT = 400;
-  const SHADOW = 30;
-  const ROOT = ".sample-book";
+type EffectStep = [
+  start: number,
+  end: number,
+  handler: (progress: number) => EffectStyle
+];
 
+const updateBook = (root: string, progress: number, timeline: EffectStep[]) => {
   let clipPathRemain: string,
     clipPathFlip: string,
     clipPathFlipShadow: string,
@@ -134,9 +136,66 @@ const updateDemoBook = (progress: number) => {
     transform: string,
     transformEffect: string;
 
-  // progress = 0.9999999925888101
+  for (let item of timeline) {
+    if (item[0] <= progress && progress <= item[1]) {
+      const fullProgress = (progress - item[0]) / (item[1] - item[0]);
+      ({
+        clipPathRemain,
+        clipPathFlip,
+        clipPathFlipShadow,
+        clipPathEffect,
+        boxShadow,
+        transformFlip: transform,
+        transformEffect,
+      } = item[2](fullProgress));
+      break;
+    }
+  }
 
-  const points = [
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .shadowed-front")
+    .forEach((i) => {
+      i.style.boxShadow = boxShadow;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .masked-back")
+    .forEach((i) => {
+      i.style.clipPath = clipPathRemain;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .masked-shadow")
+    .forEach((i) => {
+      i.style.clipPath = clipPathFlipShadow;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .masked-front")
+    .forEach((i) => {
+      i.style.clipPath = clipPathFlip;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .masked-effect")
+    .forEach((i) => {
+      i.style.clipPath = clipPathEffect;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .transformed-front")
+    .forEach((i) => {
+      i.style.transform = transform;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(root + " .transformed-effect")
+    .forEach((i) => {
+      i.style.transform = transformEffect;
+    });
+};
+
+const updateDemoBook = (progress: number) => {
+  const WIDTH = 300;
+  const HEIGHT = 400;
+  const SHADOW = 30;
+  const ROOT = ".sample-book";
+
+  updateBook(ROOT, progress, [
     [
       0,
       0.1,
@@ -199,61 +258,7 @@ const updateDemoBook = (progress: number) => {
         );
       },
     ],
-  ] as const;
-
-  // progress = 0.8
-
-  for (let item of points) {
-    if (item[0] <= progress && progress <= item[1]) {
-      const fullProgress = (progress - item[0]) / (item[1] - item[0]);
-      ({
-        clipPathRemain,
-        clipPathFlip,
-        clipPathFlipShadow,
-        clipPathEffect,
-        boxShadow,
-        transformFlip: transform,
-        transformEffect,
-      } = item[2](fullProgress));
-      break;
-    }
-  }
-
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .shadowed-front")
-    .forEach((i) => {
-      i.style.boxShadow = boxShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")
-    .forEach((i) => {
-      i.style.clipPath = clipPathRemain;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlipShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = transform;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = transformEffect;
-    });
+  ]);
 };
 
 const updateDemoBook2 = (progress: number) => {
@@ -262,17 +267,7 @@ const updateDemoBook2 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book2";
 
-  let clipPathRemain: string,
-    clipPathFlip: string,
-    clipPathFlipShadow: string,
-    clipPathEffect: string,
-    boxShadow: string,
-    transform: string,
-    transformEffect: string;
-
-  // progress = 0.9999999925888101
-
-  const points = [
+  updateBook(ROOT, progress, [
     [
       0,
       0.1,
@@ -335,61 +330,7 @@ const updateDemoBook2 = (progress: number) => {
         );
       },
     ],
-  ] as const;
-
-  // progress = 0.8
-
-  for (let item of points) {
-    if (item[0] <= progress && progress <= item[1]) {
-      const fullProgress = (progress - item[0]) / (item[1] - item[0]);
-      ({
-        clipPathRemain,
-        clipPathFlip,
-        clipPathFlipShadow,
-        clipPathEffect,
-        boxShadow,
-        transformFlip: transform,
-        transformEffect,
-      } = item[2](fullProgress));
-      break;
-    }
-  }
-
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .shadowed-front")
-    .forEach((i) => {
-      i.style.boxShadow = boxShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")
-    .forEach((i) => {
-      i.style.clipPath = clipPathRemain;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlipShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = transform;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = transformEffect;
-    });
+  ]);
 };
 
 const updateDemoBook3 = (progress: number) => {
@@ -398,17 +339,7 @@ const updateDemoBook3 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book3";
 
-  let clipPathRemain: string,
-    clipPathFlip: string,
-    clipPathFlipShadow: string,
-    clipPathEffect: string,
-    boxShadow: string,
-    transform: string,
-    transformEffect: string;
-
-  // progress = 0.9999999925888101
-
-  const points = [
+  updateBook(ROOT, progress, [
     [
       0,
       0.1,
@@ -471,60 +402,7 @@ const updateDemoBook3 = (progress: number) => {
         );
       },
     ],
-  ] as const;
-
-  // progress = 0.8
-
-  for (let item of points) {
-    if (item[0] <= progress && progress <= item[1]) {
-      const fullProgress = (progress - item[0]) / (item[1] - item[0]);
-      ({
-        clipPathRemain,
-        clipPathFlip,
-        clipPathFlipShadow,
-        clipPathEffect,
-        boxShadow,
-        transformFlip: transform,
-        transformEffect,
-      } = item[2](fullProgress));
-      break;
-    }
-  }
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .shadowed-front")
-    .forEach((i) => {
-      i.style.boxShadow = boxShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")
-    .forEach((i) => {
-      i.style.clipPath = clipPathRemain;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlipShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = transform;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = transformEffect;
-    });
+  ]);
 };
 
 const updateDemoBook4 = (progress: number) => {
@@ -533,17 +411,7 @@ const updateDemoBook4 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book4";
 
-  let clipPathRemain: string,
-    clipPathFlip: string,
-    clipPathFlipShadow: string,
-    clipPathEffect: string,
-    boxShadow: string,
-    transform: string,
-    transformEffect: string;
-
-  // progress = 0.9999999925888101
-
-  const points = [
+  updateBook(ROOT, progress, [
     [
       0,
       0.1,
@@ -606,60 +474,7 @@ const updateDemoBook4 = (progress: number) => {
         );
       },
     ],
-  ] as const;
-
-  // progress = 0.8
-
-  for (let item of points) {
-    if (item[0] <= progress && progress <= item[1]) {
-      const fullProgress = (progress - item[0]) / (item[1] - item[0]);
-      ({
-        clipPathRemain,
-        clipPathFlip,
-        clipPathFlipShadow,
-        clipPathEffect,
-        boxShadow,
-        transformFlip: transform,
-        transformEffect,
-      } = item[2](fullProgress));
-      break;
-    }
-  }
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .shadowed-front")
-    .forEach((i) => {
-      i.style.boxShadow = boxShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-back")
-    .forEach((i) => {
-      i.style.clipPath = clipPathRemain;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-shadow")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlipShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-front")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = transform;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(ROOT + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = transformEffect;
-    });
+  ]);
 };
 
 const fpxRatio = 1;
