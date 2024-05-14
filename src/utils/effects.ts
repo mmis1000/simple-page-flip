@@ -13,9 +13,20 @@ import {
   Pos,
   toClipPath,
 } from "./coordinate-utils";
+
 import * as glMatrix from "gl-matrix";
 
 const SHADOW_SIZE_TOLERANCE = 1.3;
+
+export interface EffectStyle {
+  clipPathRemain: string
+  clipPathFlipShadow: string
+  clipPathFlip: string
+  clipPathEffect: string
+  boxShadow: string
+  transformFlip: string
+  transformEffect: string
+}
 
 export const getEffectLeftTop = (
   width: number,
@@ -23,7 +34,7 @@ export const getEffectLeftTop = (
   leftOffset: number,
   topOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posLeft = pos(0, leftOffset);
   const matrixRaw = genReflectMatrix(posTop, posLeft);
@@ -123,7 +134,7 @@ export const getEffectLeftTop = (
     clipPathFlip,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
@@ -133,7 +144,7 @@ export const getEffectRightTop = (
   rightOffset: number,
   topOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posRight = pos(width, rightOffset);
   const matrixRaw = genReflectMatrix(posTop, posRight);
@@ -237,7 +248,7 @@ export const getEffectRightTop = (
     clipPathFlipShadow,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
@@ -247,7 +258,7 @@ export const getEffectLeft = (
   topOffset: number,
   bottomOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
   const matrixRaw = genReflectMatrix(posTop, posBottom);
@@ -351,7 +362,7 @@ export const getEffectLeft = (
     clipPathFlip,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
@@ -361,7 +372,7 @@ export const getEffectRight = (
   topOffset: number,
   bottomOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
   const matrixRaw = genReflectMatrix(posTop, posBottom);
@@ -466,7 +477,7 @@ export const getEffectRight = (
     clipPathFlip,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
@@ -476,7 +487,7 @@ export const getEffectLeftBottom = (
   leftOffset: number,
   bottomOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posBottom = pos(bottomOffset, height);
   const posLeft = pos(0, leftOffset);
   const matrixRaw = genReflectMatrix(posBottom, posLeft);
@@ -580,7 +591,7 @@ export const getEffectLeftBottom = (
     clipPathFlipShadow,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
@@ -590,7 +601,7 @@ export const getEffectRightBottom = (
   rightOffset: number,
   bottomOffset: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const posBottom = pos(bottomOffset, height);
   const posRight = pos(width, rightOffset);
   const matrixRaw = genReflectMatrix(posBottom, posRight);
@@ -694,7 +705,7 @@ export const getEffectRightBottom = (
     clipPathFlipShadow,
     clipPathEffect,
     boxShadow,
-    transform,
+    transformFlip: transform,
     transformEffect,
   };
 };
