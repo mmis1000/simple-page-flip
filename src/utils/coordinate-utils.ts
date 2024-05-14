@@ -30,10 +30,10 @@ export function posAdd(...poss: Pos[]) {
 }
 
 export function equalF32(a: number, b: number) {
-  const eplipse = 1.19e-7;
+  const epsilon = 1.19e-7;
   const bigger = Math.max(Math.abs(a), Math.abs(b));
   const lesser = Math.min(Math.abs(a), Math.abs(b));
-  return Math.abs(bigger - lesser) < Math.abs(bigger) * eplipse;
+  return Math.abs(bigger - lesser) < Math.abs(bigger) * epsilon;
 }
 
 export function genMatrix(s1: Pos, s2: Pos, s3: Pos, t1: Pos, t2: Pos, t3: Pos) {
@@ -132,7 +132,7 @@ export function lineIntersect(x1: number, y1: number, x2: number, y2: number, x3
   ] as [number, number, boolean, boolean];
 }
 
-export function intesection(line1: Line, line2: Line) {
+export function intersection(line1: Line, line2: Line) {
   return lineIntersect(
     line1[0][0],
     line1[0][1],
@@ -206,7 +206,7 @@ export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amou
   for (let i = 0; i < newEdges.length; i++) {
     const prev = newEdges[(i - 1 + newEdges.length) % newEdges.length];
     const old = newEdges[i];
-    const newPoint = intesection(prev, old);
+    const newPoint = intersection(prev, old);
     if (newPoint) {
       newPoints.push(pos(newPoint[0], newPoint[1]));
     } else {
@@ -244,7 +244,7 @@ export function applyReverseTransform(point: Pos, transformMatrix: glMatrix.mat3
   return pos(transformOutput[0], transformOutput[1]);
 }
 
-export function insertLineToPolygin(polygon: Pos[], newLine: Line, index: number) {
+export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number) {
   const wrap = (i: number) =>
     (((i + polygon.length) % polygon.length) + polygon.length) % polygon.length;
 
@@ -256,10 +256,10 @@ export function insertLineToPolygin(polygon: Pos[], newLine: Line, index: number
       polygon[wrap(prevPoint)],
       polygon[wrap(prevPoint + 1)]
     )
-    newPointA = intesection(lineBefore, newLine);
+    newPointA = intersection(lineBefore, newLine);
     if (!newPointA || !newPointA[2]) {
       if (prevPoint === index) {
-        // no intesection
+        // no intersection
         break
       }
       // mark as point to remove
@@ -278,10 +278,10 @@ export function insertLineToPolygin(polygon: Pos[], newLine: Line, index: number
       polygon[wrap(nextPoint - 1)],
       polygon[wrap(nextPoint)]
     )
-    newPointB = intesection(newLine, lineAfter);
+    newPointB = intersection(newLine, lineAfter);
     if (!newPointB || !newPointB[3]) {
       if (nextPoint === index) {
-        // no intesection
+        // no intersection
         break
       }
       // mark as point to remove

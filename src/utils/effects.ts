@@ -1,4 +1,4 @@
-import { pos, genReflectMatrix, toCSSMatrix, toCSSNumber, expandPolygon, insertLineToPolygin, line, applyReverseTransform, posAdd, applyTransform } from "./coordinate-utils";
+import { pos, genReflectMatrix, toCSSMatrix, toCSSNumber, expandPolygon, insertLineToPolygon, line, applyReverseTransform, posAdd, applyTransform } from "./coordinate-utils";
 
 const SHADOW_SIZE_TOLERANCE = 1.3
 
@@ -35,13 +35,13 @@ export const getEffectLeftTop = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     leftOffset >= topOffset
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
-  newPolygin = insertLineToPolygin(
-    newPolygin,
+  newPolygon = insertLineToPolygon(
+    newPolygon,
     line(
       polygon[0],
       applyReverseTransform(
@@ -53,8 +53,8 @@ export const getEffectLeftTop = (
   );
 
   if (leftOffset >= topOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -65,8 +65,8 @@ export const getEffectLeftTop = (
       2
     );
   } else {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -78,7 +78,7 @@ export const getEffectLeftTop = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
@@ -123,13 +123,13 @@ export const getEffectRightTop = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     rightOffset >= (width - topOffset)
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
-  newPolygin = insertLineToPolygin(
-    newPolygin,
+  newPolygon = insertLineToPolygon(
+    newPolygon,
     line(
       polygon[0],
       applyReverseTransform(
@@ -141,8 +141,8 @@ export const getEffectRightTop = (
   );
 
   if (rightOffset >= (width - topOffset)) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -153,8 +153,8 @@ export const getEffectRightTop = (
       2
     );
   } else {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -166,7 +166,7 @@ export const getEffectRightTop = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
@@ -211,22 +211,22 @@ export const getEffectLeft = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     topOffset > bottomOffset
       ? expandPolygon(polygon, [0, 1], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   if (topOffset > bottomOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[0],
         applyReverseTransform(pos(polygon[0][0] + 10, polygon[0][1]), matrixRaw)
       ),
       0
     );
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -237,16 +237,16 @@ export const getEffectLeft = (
       3
     );
   } else if (topOffset < bottomOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[3],
         applyReverseTransform(pos(polygon[3][0] + 10, polygon[3][1]), matrixRaw)
       ),
       3
     );
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -258,7 +258,7 @@ export const getEffectLeft = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
@@ -304,22 +304,22 @@ export const getEffectRight = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     width - topOffset > width - bottomOffset
       ? expandPolygon(polygon, [0, 1], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   if (width - topOffset > width - bottomOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[0],
         applyReverseTransform(pos(polygon[0][0] + 10, polygon[0][1]), matrixRaw)
       ),
       0
     );
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -330,16 +330,16 @@ export const getEffectRight = (
       3
     );
   } else if (width - topOffset < width - bottomOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[3],
         applyReverseTransform(pos(polygon[3][0] + 10, polygon[3][1]), matrixRaw)
       ),
       3
     );
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -351,7 +351,7 @@ export const getEffectRight = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
@@ -396,13 +396,13 @@ export const getEffectLeftBottom = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     height - leftOffset >= bottomOffset
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
-  newPolygin = insertLineToPolygin(
-    newPolygin,
+  newPolygon = insertLineToPolygon(
+    newPolygon,
     line(
       polygon[0],
       applyReverseTransform(
@@ -414,8 +414,8 @@ export const getEffectLeftBottom = (
   );
 
   if (height - leftOffset >= bottomOffset) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -426,8 +426,8 @@ export const getEffectLeftBottom = (
       2
     );
   } else {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -439,7 +439,7 @@ export const getEffectLeftBottom = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
@@ -484,13 +484,13 @@ export const getEffectRightBottom = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
-  let newPolygin =
+  let newPolygon =
     height - rightOffset >= (width - bottomOffset)
       ? expandPolygon(polygon, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
       : expandPolygon(polygon, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
-  newPolygin = insertLineToPolygin(
-    newPolygin,
+  newPolygon = insertLineToPolygon(
+    newPolygon,
     line(
       polygon[0],
       applyReverseTransform(
@@ -502,8 +502,8 @@ export const getEffectRightBottom = (
   );
 
   if (height - rightOffset >= (width - bottomOffset)) {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[1],
         applyReverseTransform(
@@ -514,8 +514,8 @@ export const getEffectRightBottom = (
       2
     );
   } else {
-    newPolygin = insertLineToPolygin(
-      newPolygin,
+    newPolygon = insertLineToPolygon(
+      newPolygon,
       line(
         polygon[2],
         applyReverseTransform(
@@ -527,7 +527,7 @@ export const getEffectRightBottom = (
     );
   }
 
-  const clipPathFlipShadow = `polygon(${newPolygin
+  const clipPathFlipShadow = `polygon(${newPolygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 

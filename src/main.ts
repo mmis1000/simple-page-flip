@@ -107,25 +107,25 @@ const updateDemoBook = (progress: number) => {
     }],
     [0.3, 0.9, (fullProgress: number) => {
       const top = 0.3 + fullProgress * 0.7;
-      const botton = fullProgress * 1;
+      const bottom = fullProgress * 1;
 
       return getEffectLeft(
         WIDTH,
         HEIGHT,
         WIDTH * top,
-        WIDTH * botton,
+        WIDTH * bottom,
         SHADOW
       );
     }],
     [0.9, 1, (_fullProgress: number) => {
       const top = 1;
-      const botton = 1;
+      const bottom = 1;
 
       return getEffectLeft(
         WIDTH,
         HEIGHT,
         WIDTH * top,
-        WIDTH * botton,
+        WIDTH * bottom,
         SHADOW
       );
     }]
@@ -303,13 +303,13 @@ const updateDemoBook3 = (progress: number) => {
     }],
     [0.9, 1, (_fullProgress: number) => {
       const top = 1;
-      const botton = 1;
+      const bottom = 1;
 
       return getEffectLeft(
         WIDTH,
         HEIGHT,
         WIDTH * top,
-        WIDTH * botton,
+        WIDTH * bottom,
         SHADOW
       );
     }]
