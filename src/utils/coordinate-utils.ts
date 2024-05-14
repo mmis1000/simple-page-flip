@@ -1,7 +1,7 @@
 import * as glMatrix from 'gl-matrix'
 
-type Pos = [number, number]
-type Line = [Pos, Pos]
+export type Pos = [number, number]
+export type Line = [Pos, Pos]
 
 export function toCSSNumber(v: number) {
   if (Math.abs(v) < 1e-6) {

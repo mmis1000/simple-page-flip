@@ -1,4 +1,6 @@
-import { pos, genReflectMatrix, toCSSMatrix, toCSSNumber, expandPolygon, insertLineToPolygon, line, applyReverseTransform, posAdd, applyTransform } from "./coordinate-utils";
+import { pos, genReflectMatrix, toCSSMatrix, toCSSNumber, expandPolygon, insertLineToPolygon, line, applyReverseTransform, posAdd, applyTransform, genMatrix, Pos } from "./coordinate-utils";
+import * as glMatrix from 'gl-matrix'
+
 
 const SHADOW_SIZE_TOLERANCE = 1.3
 
@@ -82,12 +84,43 @@ export const getEffectLeftTop = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    -1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, 0),
+    applyTransform(posTop, matrixRaw),
+    applyTransform(posLeft, matrixRaw),
+    applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+
   return {
     clipPathRemain,
     clipPathFlipShadow,
     clipPathFlip,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
 export const getEffectRightTop = (
@@ -170,12 +203,43 @@ export const getEffectRightTop = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, 0),
+    applyTransform(posTop, matrixRaw),
+    applyTransform(posRight, matrixRaw),
+    applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+  
   return {
     clipPathRemain,
     clipPathFlip,
     clipPathFlipShadow,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
 export const getEffectLeft = (
@@ -262,12 +326,43 @@ export const getEffectLeft = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    -1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, 0),
+    applyTransform(posTop, matrixRaw),
+    applyTransform(posBottom, matrixRaw),
+    applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+
   return {
     clipPathRemain,
     clipPathFlipShadow,
     clipPathFlip,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
 export const getEffectRight = (
@@ -355,12 +450,43 @@ export const getEffectRight = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, 0),
+    applyTransform(posTop, matrixRaw),
+    applyTransform(posBottom, matrixRaw),
+    applyTransform(posAdd(posTop, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+  
   return {
     clipPathRemain,
     clipPathFlipShadow,
     clipPathFlip,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
 export const getEffectLeftBottom = (
@@ -443,12 +569,43 @@ export const getEffectLeftBottom = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    -1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, height),
+    applyTransform(posLeft, matrixRaw),
+    applyTransform(posBottom, matrixRaw),
+    applyTransform(posAdd(posBottom, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+
   return {
     clipPathRemain,
     clipPathFlip,
     clipPathFlipShadow,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
 export const getEffectRightBottom = (
@@ -458,13 +615,13 @@ export const getEffectRightBottom = (
   bottomOffset: number,
   maxShadowWidth: number
 ) => {
-  const posTop = pos(bottomOffset, height);
+  const posBottom = pos(bottomOffset, height);
   const posRight = pos(width, rightOffset);
-  const matrixRaw = genReflectMatrix(posTop, posRight);
+  const matrixRaw = genReflectMatrix(posBottom, posRight);
   const transform = toCSSMatrix(matrixRaw);
 
   const polygonRemain = [
-    posTop,
+    posBottom,
     posRight,
     pos(width, 0),
     pos(0, 0),
@@ -478,7 +635,7 @@ export const getEffectRightBottom = (
   const boxShadowWidth = Math.min(height - rightOffset, width - bottomOffset, maxShadowWidth);
   const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
 
-  const polygon = [posTop, posRight, pos(width, height)];
+  const polygon = [posBottom, posRight, pos(width, height)];
 
   const clipPathFlip = `polygon(${polygon
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
@@ -531,11 +688,42 @@ export const getEffectRightBottom = (
     .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
     .join(", ")})`;
 
+  const posVector = glMatrix.vec2.fromValues(
+    1,
+    0
+  )
+
+  glMatrix.vec2.normalize(posVector, posVector)
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth)
+
+  const matrixEffect = genMatrix(
+    pos(0, 0),
+    pos(0, height),
+    pos(width, height),
+    applyTransform(posRight, matrixRaw),
+    applyTransform(posBottom, matrixRaw),
+    applyTransform(posAdd(posBottom, posVector as Pos), matrixRaw)
+  )
+
+  const transformEffect = toCSSMatrix(matrixEffect)
+
+  const effectPolygon = polygon.map(i => {
+    return applyTransform(i, matrixRaw)
+  }).map(i => {
+    return applyReverseTransform(i, matrixEffect)
+  })
+
+  const clipPathEffect = `polygon(${effectPolygon
+    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .join(", ")})`;
+
   return {
     clipPathRemain,
     clipPathFlip,
     clipPathFlipShadow,
+    clipPathEffect,
     boxShadow,
-    transform
+    transform,
+    transformEffect
   };
 };
