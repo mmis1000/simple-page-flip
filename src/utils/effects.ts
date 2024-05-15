@@ -1039,16 +1039,16 @@ export const createEffectRight = (
     }
   } else if (resTop?.hitLine1 && resLeft?.hitLine1) {
     //       x
-    // ┌──────x──────┐
-    // │       x     │
-    // │        x    │
-    // │         x   │
-    // │          x  │
-    // │           x │
-    // │            x│
-    // │             x
-    // │             │x
-    // └─────────────┘ x
+    // ┌────x────────┐
+    // │   x         │
+    // │  x          │
+    // │ x           │
+    // │x            │
+    // x             │
+    // │             │
+    // │             │
+    // │             │
+    // └─────────────┘
 
     return getEffectRight(width, height, resTop.pos[0], 0, maxShadowWidth);
   } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {
@@ -1056,13 +1056,13 @@ export const createEffectRight = (
     //  │            │
     //  │            │
     //  │            │
-    //  │            │ x
-    //  │            │x
-    //  │            x
-    //  │           x│
-    //  │          x │
-    //  └─────────x──┘
-    //           x
+    //  │            │
+    // x│            │
+    //  x            │
+    //  │x           │
+    //  │ x          │
+    //  └──x─────────┘
+    //      x
 
     return getEffectRight(width, height, 0, resBottom.pos[0], maxShadowWidth);
   } else {
