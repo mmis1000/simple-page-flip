@@ -12,6 +12,7 @@ import {
   genMatrix,
   Pos,
   toClipPath,
+  intersection,
 } from "./coordinate-utils";
 
 import * as glMatrix from "gl-matrix";
@@ -19,13 +20,13 @@ import * as glMatrix from "gl-matrix";
 const SHADOW_SIZE_TOLERANCE = 1.3;
 
 export interface EffectStyle {
-  clipPathRemain: string
-  clipPathFlipShadow: string
-  clipPathFlip: string
-  clipPathEffect: string
-  boxShadow: string
-  transformFlip: string
-  transformEffect: string
+  clipPathRemain: string;
+  clipPathFlipShadow: string;
+  clipPathFlip: string;
+  clipPathEffect: string;
+  boxShadow: string;
+  transformFlip: string;
+  transformEffect: string;
 }
 
 export const getEffectLeftTop = (
@@ -708,4 +709,301 @@ export const getEffectRightBottom = (
     transformFlip: transform,
     transformEffect,
   };
+};
+
+/**
+ *
+ * @param width
+ * @param height
+ * @param centerX
+ * @param centerY
+ * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
+ *              positive for clockwise, negative for counter clockwise
+ * @param maxShadowWidth
+ */
+export const createEffectLeft = (
+  width: number,
+  height: number,
+  centerX: number,
+  centerY: number,
+  angle: number,
+  maxShadowWidth: number
+) => {
+  const angleLine = Math.PI / 2 + angle
+  const vector = pos(Math.cos(angleLine), Math.sin(angleLine))
+  const lineStart = pos(centerX, centerY)
+  const lineTo = posAdd(lineStart, vector)
+  const lineSplit = line(lineStart, lineTo)
+
+  const leftTop = pos(0, 0)
+  const leftBottom = pos(0, height)
+  const rightTop = pos(width, 0)
+  const rightBottom = pos(width, height)
+
+  const lineTop = line(leftTop, rightTop)
+  const lineRight = line(rightTop, rightBottom)
+  const lineBottom = line(rightBottom, leftBottom)
+  const lineLeft = line(leftBottom, leftTop)
+
+  const resTop = intersection(lineTop, lineSplit)
+  const resRight = intersection(lineRight, lineSplit)
+  const resBottom = intersection(lineBottom, lineSplit)
+  const resLeft = intersection(lineLeft, lineSplit)
+
+  if (resTop?.hitLine1 && resLeft?.hitLine1) {
+    return getEffectLeftTop(
+      width,
+      height,
+      resLeft.pos[1],
+      resTop.pos[0],
+      maxShadowWidth
+    )
+  } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectLeft(
+      width,
+      height,
+      resTop.pos[0],
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else if (resLeft?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectLeftBottom(
+      width,
+      height,
+      resLeft.pos[1],
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
+    // we clipped into from left to right incorrectly              
+    //   ┌─────────────┐    
+    //   │             │    
+    //   │             │    
+    //   │             xxxx 
+    //   │         xxxx│    
+    //   │     xxxx    │    
+    //   │ xxxx        │    
+    // xxxx            │    
+    //   │             │    
+    //   └─────────────┘    
+
+    // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
+    if (resLeft.pos[1] < resRight.pos[1]) {
+      return getEffectLeftTop(
+        width,
+        height,
+        resLeft.pos[1],
+        width,
+        maxShadowWidth
+      )
+    } else {
+      return getEffectLeftBottom(
+        width,
+        height,
+        resLeft.pos[1],
+        width,
+        maxShadowWidth
+      )
+    }
+  } else if (resTop?.hitLine1 && resRight?.hitLine1) {                  
+    //       x            
+    // ┌──────x──────┐    
+    // │       x     │    
+    // │        x    │    
+    // │         x   │    
+    // │          x  │    
+    // │           x │    
+    // │            x│    
+    // │             x    
+    // │             │x   
+    // └─────────────┘ x  
+                                  
+    return getEffectLeft(
+      width,
+      height,
+      resTop.pos[0],
+      width,
+      maxShadowWidth
+    )
+  } else if (resBottom?.hitLine1 && resRight?.hitLine1) {                    
+    //  ┌────────────┐    
+    //  │            │    
+    //  │            │    
+    //  │            │    
+    //  │            │ x  
+    //  │            │x   
+    //  │            x    
+    //  │           x│    
+    //  │          x │    
+    //  └─────────x──┘    
+    //           x        
+                     
+    return getEffectLeft(
+      width,
+      height,
+      width,
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else {
+    console.warn('invalid style result')
+    return {
+      clipPathEffect: '',
+      clipPathFlipShadow: '',
+      clipPathFlip: '',
+      clipPathRemain: '',
+      boxShadow: '',
+      transformFlip: '',
+      transformEffect: ''
+    } satisfies EffectStyle
+  }
+};
+
+
+/**
+ *
+ * @param width
+ * @param height
+ * @param centerX
+ * @param centerY
+ * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
+ *              positive for clockwise, negative for counter clockwise
+ * @param maxShadowWidth
+ */
+export const createEffectRight = (
+  width: number,
+  height: number,
+  centerX: number,
+  centerY: number,
+  angle: number,
+  maxShadowWidth: number
+) => {
+  const angleLine = Math.PI / 2 + angle
+  const vector = pos(Math.cos(angleLine), Math.sin(angleLine))
+  const lineStart = pos(centerX, centerY)
+  const lineTo = posAdd(lineStart, vector)
+  const lineSplit = line(lineStart, lineTo)
+
+  const leftTop = pos(0, 0)
+  const leftBottom = pos(0, height)
+  const rightTop = pos(width, 0)
+  const rightBottom = pos(width, height)
+
+  const lineTop = line(leftTop, rightTop)
+  const lineRight = line(rightTop, rightBottom)
+  const lineBottom = line(rightBottom, leftBottom)
+  const lineLeft = line(leftBottom, leftTop)
+
+  const resTop = intersection(lineTop, lineSplit)
+  const resRight = intersection(lineRight, lineSplit)
+  const resBottom = intersection(lineBottom, lineSplit)
+  const resLeft = intersection(lineLeft, lineSplit)
+
+  if (resTop?.hitLine1 && resRight?.hitLine1) {
+    return getEffectRightTop(
+      width,
+      height,
+      resRight.pos[1],
+      resTop.pos[0],
+      maxShadowWidth
+    )
+  } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectRight(
+      width,
+      height,
+      resTop.pos[0],
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else if (resRight?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectRightBottom(
+      width,
+      height,
+      resRight.pos[1],
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
+    // we clipped into from left to right incorrectly              
+    //   ┌─────────────┐    
+    //   │             │    
+    //   │             │    
+    //   │             xxxx 
+    //   │         xxxx│    
+    //   │     xxxx    │    
+    //   │ xxxx        │    
+    // xxxx            │    
+    //   │             │    
+    //   └─────────────┘    
+
+    // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
+    if (resLeft.pos[1] < resRight.pos[1]) {
+      return getEffectRightBottom(
+        width,
+        height,
+        resRight.pos[1],
+        width,
+        maxShadowWidth
+      )
+    } else {
+      return getEffectRightTop(
+        width,
+        height,
+        resRight.pos[1],
+        width,
+        maxShadowWidth
+      )
+    }
+  } else if (resTop?.hitLine1 && resLeft?.hitLine1) {                  
+    //       x            
+    // ┌──────x──────┐    
+    // │       x     │    
+    // │        x    │    
+    // │         x   │    
+    // │          x  │    
+    // │           x │    
+    // │            x│    
+    // │             x    
+    // │             │x   
+    // └─────────────┘ x  
+                                  
+    return getEffectRight(
+      width,
+      height,
+      resTop.pos[0],
+      0,
+      maxShadowWidth
+    )
+  } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {                    
+    //  ┌────────────┐    
+    //  │            │    
+    //  │            │    
+    //  │            │    
+    //  │            │ x  
+    //  │            │x   
+    //  │            x    
+    //  │           x│    
+    //  │          x │    
+    //  └─────────x──┘    
+    //           x        
+                     
+    return getEffectRight(
+      width,
+      height,
+      0,
+      resBottom.pos[0],
+      maxShadowWidth
+    )
+  } else {
+    console.warn('invalid style result')
+    return {
+      clipPathEffect: '',
+      clipPathFlipShadow: '',
+      clipPathFlip: '',
+      clipPathRemain: '',
+      boxShadow: '',
+      transformFlip: '',
+      transformEffect: ''
+    } satisfies EffectStyle
+  }
 };

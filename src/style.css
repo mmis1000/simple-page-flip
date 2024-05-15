@@ -27,55 +27,39 @@ html {
   background: #7777ff;
 }
 
-
-.sample-book.wrap {
+.sample-book.wrap,
+.sample-book3.wrap,
+.sample-book5.wrap {
   height: 400px;
   width: 300px;
   margin-right: calc(300px + 4rem);
   margin-top: 150px;
   margin-bottom: 150px;
 }
-.sample-book .item {
+.sample-book .item,
+.sample-book3 .item,
+.sample-book5 .item{
   height: 400px;
   width: 300px;
 }
 
 
-.sample-book2.wrap {
+.sample-book2.wrap,
+.sample-book4.wrap,
+.sample-book6.wrap {
   height: 400px;
   width: 300px;
   margin-left: calc(300px + 4rem);
   margin-top: 150px;
   margin-bottom: 150px;
 }
-.sample-book2 .item {
+.sample-book2 .item,
+.sample-book4 .item,
+.sample-book6 .item {
   height: 400px;
   width: 300px;
 }
 
-.sample-book3.wrap {
-  height: 400px;
-  width: 300px;
-  margin-right: calc(300px + 4rem);
-  margin-top: 150px;
-  margin-bottom: 150px;
-}
-.sample-book3 .item {
-  height: 400px;
-  width: 300px;
-}
-
-.sample-book4.wrap {
-  height: 400px;
-  width: 300px;
-  margin-left: calc(300px + 4rem);
-  margin-top: 150px;
-  margin-bottom: 150px;
-}
-.sample-book4 .item {
-  height: 400px;
-  width: 300px;
-}
 .layer-shadow .item {
   background: transparent !important;
 }

@@ -132,8 +132,13 @@ export function lineIntersect(x1: number, y1: number, x2: number, y2: number, x3
   ] as [number, number, boolean, boolean];
 }
 
-export function intersection(line1: Line, line2: Line) {
-  return lineIntersect(
+export function intersection(line1: Line, line2: Line): {
+  pos: Pos
+  hitLine1: boolean
+  hitLine2: boolean
+
+} | null {
+  const res = lineIntersect(
     line1[0][0],
     line1[0][1],
     line1[1][0],
@@ -143,6 +148,16 @@ export function intersection(line1: Line, line2: Line) {
     line2[1][0],
     line2[1][1]
   );
+
+  if (res) {
+    return {
+      pos: pos(res[0], res[1]),
+      hitLine1: res[2],
+      hitLine2: res[3]
+    }
+  } else {
+    return null
+  }
 }
 
 export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amount = 1): Pos[] {
@@ -208,7 +223,7 @@ export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amou
     const old = newEdges[i];
     const newPoint = intersection(prev, old);
     if (newPoint) {
-      newPoints.push(pos(newPoint[0], newPoint[1]));
+      newPoints.push(newPoint.pos);
     } else {
       console.error('bad expand')
     }
@@ -250,14 +265,14 @@ export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number
 
   const replacePrev = []
   let prevPoint = wrap(index - 1)
-  let newPointA
+  let newPointA: Pos | null = null
   while (true) {
     const lineBefore = line(
       polygon[wrap(prevPoint)],
       polygon[wrap(prevPoint + 1)]
     )
-    newPointA = intersection(lineBefore, newLine);
-    if (!newPointA || !newPointA[2]) {
+    const newPointARes = intersection(lineBefore, newLine);
+    if (!newPointARes || !newPointARes.hitLine1) {
       if (prevPoint === index) {
         // no intersection
         break
@@ -266,20 +281,21 @@ export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number
       replacePrev.unshift(wrap(prevPoint))
       prevPoint = wrap(prevPoint - 1)
     } else {
+      newPointA = newPointARes.pos
       break
     }
   }
 
   const replaceNext = []
   let nextPoint = wrap(index + 1)
-  let newPointB
+  let newPointB: Pos | null = null
   while (true) {
     const lineAfter = line(
       polygon[wrap(nextPoint - 1)],
       polygon[wrap(nextPoint)]
     )
-    newPointB = intersection(newLine, lineAfter);
-    if (!newPointB || !newPointB[3]) {
+    const newPointBRes = intersection(newLine, lineAfter);
+    if (!newPointBRes || !newPointBRes.hitLine2) {
       if (nextPoint === index) {
         // no intersection
         break
@@ -288,16 +304,14 @@ export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number
       replaceNext.push(wrap(nextPoint))
       nextPoint = wrap(nextPoint + 1)
     } else {
+      newPointB = newPointBRes.pos
       break
     }
   }
   
   if (
     newPointA == null ||
-    newPointB == null ||
-    // check if we are actually go through polygon edge, skip the whole operation if we don't
-    !newPointA[2] ||
-    !newPointB[3]
+    newPointB == null
   ) {
     newPointA = polygon[wrap(index - 1)];
     newPointB = polygon[wrap(index + 1)];

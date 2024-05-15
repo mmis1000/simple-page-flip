@@ -1,6 +1,9 @@
 import "./style.css";
+import { pos } from "./utils/coordinate-utils.ts";
 import {
   EffectStyle,
+  createEffectLeft,
+  createEffectRight,
   getEffectLeft,
   getEffectLeftBottom,
   getEffectLeftTop,
@@ -9,116 +12,54 @@ import {
   getEffectRightTop,
 } from "./utils/effects.ts";
 
+const template = (className: string) => `
+<div class="wrap ${className}">
+  <div class="item-mask">
+    <div class="item-wrap">
+      <div class="item" style="background: lightBlue">Text Text Text Text </div>
+    </div>
+  </div>
+  <div class="item-mask">
+    <div class="item-wrap masked-back">
+      <div class="item">Text Text Text Text </div>
+    </div>
+  </div>
+  <div class="item-mask layer-shadow">
+    <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item"></div>
+    </div>
+  </div>
+  <div class="item-mask">
+    <div class="item-wrap transformed-front masked-front">
+      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
+    </div>
+  </div>
+  <div class="item-mask layer-effect">
+    <div class="item-wrap transformed-effect masked-effect">
+      <div class="item"></div>
+    </div>
+  </div>
+</div>
+`
+
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-<button id="toggle">pause/play</button> <br>
-<div class="wrap sample-book">
-  <div class="item-mask">
-    <div class="item-wrap">
-      <div class="item" style="background: lightBlue">Text Text Text Text </div>
-    </div>
+  <button id="toggle">pause/play</button> <br>
+  ${template('sample-book')}
+  ${template('sample-book2')}
+  ${template('sample-book3')}
+  ${template('sample-book4')}
+  <div>
+    <label>
+      <input id="sample-book5-max-angle" type="range" max="90" min="0" value="45" />
+      Max angle
+    </label>
+    <label>
+      <input id="sample-book5-y" type="range" max="100" min="0" value="100" />
+      yPos
+    </label>
   </div>
-  <div class="item-mask">
-    <div class="item-wrap masked-back">
-      <div class="item">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-shadow">
-    <div class="item-wrap transformed-front shadowed-front masked-shadow">
-      <div class="item"></div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-effect">
-    <div class="item-wrap transformed-effect masked-effect">
-      <div class="item"></div>
-    </div>
-  </div>
-</div>
-<div class="wrap sample-book2">
-  <div class="item-mask">
-    <div class="item-wrap">
-      <div class="item" style="background: lightBlue">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap masked-back">
-      <div class="item">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-shadow">
-    <div class="item-wrap transformed-front shadowed-front masked-shadow">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-effect">
-    <div class="item-wrap transformed-effect masked-effect">
-      <div class="item"></div>
-    </div>
-  </div>
-</div>
-<div class="wrap sample-book3">
-  <div class="item-mask">
-    <div class="item-wrap">
-      <div class="item" style="background: lightBlue">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap masked-back">
-      <div class="item">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-shadow">
-    <div class="item-wrap transformed-front shadowed-front masked-shadow">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-effect">
-    <div class="item-wrap transformed-effect masked-effect">
-      <div class="item"></div>
-    </div>
-  </div>
-</div>
-<div class="wrap sample-book4">
-  <div class="item-mask">
-    <div class="item-wrap">
-      <div class="item" style="background: lightBlue">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap masked-back">
-      <div class="item">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-shadow">
-    <div class="item-wrap transformed-front shadowed-front masked-shadow">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)"></div>
-    </div>
-  </div>
-  <div class="item-mask">
-    <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
-    </div>
-  </div>
-  <div class="item-mask layer-effect">
-    <div class="item-wrap transformed-effect masked-effect">
-      <div class="item"></div>
-    </div>
-  </div>
-</div>
+  ${template('sample-book5')}
+  ${template('sample-book6')}
 `;
 
 type EffectStep = [
@@ -127,66 +68,58 @@ type EffectStep = [
   handler: (progress: number) => EffectStyle
 ];
 
+const applyStyle = (rootSelector: string, style: EffectStyle) => {
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .shadowed-front")
+    .forEach((i) => {
+      i.style.boxShadow = style.boxShadow;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-back")
+    .forEach((i) => {
+      i.style.clipPath = style.clipPathRemain;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-shadow")
+    .forEach((i) => {
+      i.style.clipPath = style.clipPathFlipShadow;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-front")
+    .forEach((i) => {
+      i.style.clipPath = style.clipPathFlip;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-effect")
+    .forEach((i) => {
+      i.style.clipPath = style.clipPathEffect;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .transformed-front")
+    .forEach((i) => {
+      i.style.transform = style.transformFlip;
+    });
+  document
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .transformed-effect")
+    .forEach((i) => {
+      i.style.transform = style.transformEffect + ' translateZ(0px)';
+    });
+}
+
 const updateBook = (root: string, progress: number, timeline: EffectStep[]) => {
-  let clipPathRemain: string,
-    clipPathFlip: string,
-    clipPathFlipShadow: string,
-    clipPathEffect: string,
-    boxShadow: string,
-    transform: string,
-    transformEffect: string;
+  let style: EffectStyle | null = null
 
   for (let item of timeline) {
     if (item[0] <= progress && progress <= item[1]) {
       const fullProgress = (progress - item[0]) / (item[1] - item[0]);
-      ({
-        clipPathRemain,
-        clipPathFlip,
-        clipPathFlipShadow,
-        clipPathEffect,
-        boxShadow,
-        transformFlip: transform,
-        transformEffect,
-      } = item[2](fullProgress));
+      style = item[2](fullProgress);
       break;
     }
   }
 
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .shadowed-front")
-    .forEach((i) => {
-      i.style.boxShadow = boxShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .masked-back")
-    .forEach((i) => {
-      i.style.clipPath = clipPathRemain;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .masked-shadow")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlipShadow;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .masked-front")
-    .forEach((i) => {
-      i.style.clipPath = clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = transform;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(root + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = transformEffect;
-    });
+  if (style != null) {
+    applyStyle(root, style)
+  }
 };
 
 const updateDemoBook = (progress: number) => {
@@ -477,6 +410,53 @@ const updateDemoBook4 = (progress: number) => {
   ]);
 };
 
+const updateDemoBook5 = (progress: number) => {
+  const WIDTH = 300;
+  const HEIGHT = 400;
+  const SHADOW = 30;
+  const ROOT = ".sample-book5";
+
+  const valueMaxAngle = Number(document.querySelector<HTMLInputElement>('#sample-book5-max-angle')?.value)
+
+
+  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book5-y')?.value)
+
+  const ratio = (valuePos - 50) / 50 * -1
+
+  const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
+  const targetAngle = 0
+  const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
+  const currentCenter = ratio < 0 
+    ? pos(WIDTH * progress, HEIGHT)
+    : pos(WIDTH * progress, 0)
+  const effect = createEffectLeft(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
+  applyStyle(ROOT, effect)
+
+};
+
+const updateDemoBook6 = (progress: number) => {
+  const WIDTH = 300;
+  const HEIGHT = 400;
+  const SHADOW = 30;
+  const ROOT = ".sample-book6";
+
+  const valueMaxAngle = Number(document.querySelector<HTMLInputElement>('#sample-book5-max-angle')?.value)
+
+
+  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book5-y')?.value)
+
+  const ratio = (valuePos - 50) / 50 * 1
+
+  const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
+  const targetAngle = 0
+  const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
+  const currentCenter = ratio < 0 
+    ? pos(WIDTH * (1 - progress), 0)
+    : pos(WIDTH * (1 - progress), HEIGHT)
+  const effect = createEffectRight(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
+  applyStyle(ROOT, effect)
+
+};
 const fpxRatio = 1;
 
 const duration = 8000 * fpxRatio;
@@ -497,6 +477,8 @@ const tick = () => {
     updateDemoBook2(progress);
     updateDemoBook3(progress);
     updateDemoBook4(progress);
+    updateDemoBook5(progress);
+    updateDemoBook6(progress);
   }
   id = requestAnimationFrame(tick);
 };
