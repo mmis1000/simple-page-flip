@@ -106,7 +106,20 @@ export const getEffectLeftTop = (
   const posVector = glMatrix.vec2.fromValues(-1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(posTop[1] - posLeft[1], posLeft[0] - posTop[0]);
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -220,7 +233,20 @@ export const getEffectRightTop = (
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(posTop[1] - posRight[1], posRight[0] - posTop[0]);
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -334,7 +360,23 @@ export const getEffectLeft = (
   const posVector = glMatrix.vec2.fromValues(-1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(
+    posTop[1] - posBottom[1],
+    posBottom[0] - posTop[0]
+  );
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -449,7 +491,23 @@ export const getEffectRight = (
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(
+    posTop[1] - posBottom[1],
+    posBottom[0] - posTop[0]
+  );
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -563,7 +621,23 @@ export const getEffectLeftBottom = (
   const posVector = glMatrix.vec2.fromValues(-1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(
+    posLeft[1] - posBottom[1],
+    posBottom[0] - posLeft[0]
+  );
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -677,7 +751,23 @@ export const getEffectRightBottom = (
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
-  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth);
+
+  const shadowDirection = pos(
+    posRight[1] - posBottom[1],
+    posBottom[0] - posRight[0]
+  );
+
+  glMatrix.vec2.normalize(shadowDirection, shadowDirection);
+  const lengthRatio =
+    1 /
+    (Math.abs(
+      shadowDirection[0] * posVector[0] + shadowDirection[1] * posVector[1]
+    ) /
+      (shadowDirection[0] * shadowDirection[0] +
+        shadowDirection[1] * shadowDirection[1]) **
+        0.5);
+
+  glMatrix.vec2.scale(posVector, posVector, boxShadowWidth * lengthRatio);
 
   const matrixEffect = genMatrix(
     pos(0, 0),
@@ -729,26 +819,26 @@ export const createEffectLeft = (
   angle: number,
   maxShadowWidth: number
 ) => {
-  const angleLine = Math.PI / 2 + angle
-  const vector = pos(Math.cos(angleLine), Math.sin(angleLine))
-  const lineStart = pos(centerX, centerY)
-  const lineTo = posAdd(lineStart, vector)
-  const lineSplit = line(lineStart, lineTo)
+  const angleLine = Math.PI / 2 + angle;
+  const vector = pos(Math.cos(angleLine), Math.sin(angleLine));
+  const lineStart = pos(centerX, centerY);
+  const lineTo = posAdd(lineStart, vector);
+  const lineSplit = line(lineStart, lineTo);
 
-  const leftTop = pos(0, 0)
-  const leftBottom = pos(0, height)
-  const rightTop = pos(width, 0)
-  const rightBottom = pos(width, height)
+  const leftTop = pos(0, 0);
+  const leftBottom = pos(0, height);
+  const rightTop = pos(width, 0);
+  const rightBottom = pos(width, height);
 
-  const lineTop = line(leftTop, rightTop)
-  const lineRight = line(rightTop, rightBottom)
-  const lineBottom = line(rightBottom, leftBottom)
-  const lineLeft = line(leftBottom, leftTop)
+  const lineTop = line(leftTop, rightTop);
+  const lineRight = line(rightTop, rightBottom);
+  const lineBottom = line(rightBottom, leftBottom);
+  const lineLeft = line(leftBottom, leftTop);
 
-  const resTop = intersection(lineTop, lineSplit)
-  const resRight = intersection(lineRight, lineSplit)
-  const resBottom = intersection(lineBottom, lineSplit)
-  const resLeft = intersection(lineLeft, lineSplit)
+  const resTop = intersection(lineTop, lineSplit);
+  const resRight = intersection(lineRight, lineSplit);
+  const resBottom = intersection(lineBottom, lineSplit);
+  const resLeft = intersection(lineLeft, lineSplit);
 
   if (resTop?.hitLine1 && resLeft?.hitLine1) {
     return getEffectLeftTop(
@@ -757,7 +847,7 @@ export const createEffectLeft = (
       resLeft.pos[1],
       resTop.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
     return getEffectLeft(
       width,
@@ -765,7 +855,7 @@ export const createEffectLeft = (
       resTop.pos[0],
       resBottom.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resLeft?.hitLine1 && resBottom?.hitLine1) {
     return getEffectLeftBottom(
       width,
@@ -773,19 +863,19 @@ export const createEffectLeft = (
       resLeft.pos[1],
       resBottom.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
-    // we clipped into from left to right incorrectly              
-    //   ┌─────────────┐    
-    //   │             │    
-    //   │             │    
-    //   │             xxxx 
-    //   │         xxxx│    
-    //   │     xxxx    │    
-    //   │ xxxx        │    
-    // xxxx            │    
-    //   │             │    
-    //   └─────────────┘    
+    // we clipped into from left to right incorrectly
+    //   ┌─────────────┐
+    //   │             │
+    //   │             │
+    //   │             xxxx
+    //   │         xxxx│
+    //   │     xxxx    │
+    //   │ xxxx        │
+    // xxxx            │
+    //   │             │
+    //   └─────────────┘
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
@@ -795,7 +885,7 @@ export const createEffectLeft = (
         resLeft.pos[1],
         width,
         maxShadowWidth
-      )
+      );
     } else {
       return getEffectLeftBottom(
         width,
@@ -803,62 +893,55 @@ export const createEffectLeft = (
         resLeft.pos[1],
         width,
         maxShadowWidth
-      )
+      );
     }
-  } else if (resTop?.hitLine1 && resRight?.hitLine1) {                  
-    //       x            
-    // ┌──────x──────┐    
-    // │       x     │    
-    // │        x    │    
-    // │         x   │    
-    // │          x  │    
-    // │           x │    
-    // │            x│    
-    // │             x    
-    // │             │x   
-    // └─────────────┘ x  
-                                  
-    return getEffectLeft(
-      width,
-      height,
-      resTop.pos[0],
-      width,
-      maxShadowWidth
-    )
-  } else if (resBottom?.hitLine1 && resRight?.hitLine1) {                    
-    //  ┌────────────┐    
-    //  │            │    
-    //  │            │    
-    //  │            │    
-    //  │            │ x  
-    //  │            │x   
-    //  │            x    
-    //  │           x│    
-    //  │          x │    
-    //  └─────────x──┘    
-    //           x        
-                     
+  } else if (resTop?.hitLine1 && resRight?.hitLine1) {
+    //       x
+    // ┌──────x──────┐
+    // │       x     │
+    // │        x    │
+    // │         x   │
+    // │          x  │
+    // │           x │
+    // │            x│
+    // │             x
+    // │             │x
+    // └─────────────┘ x
+
+    return getEffectLeft(width, height, resTop.pos[0], width, maxShadowWidth);
+  } else if (resBottom?.hitLine1 && resRight?.hitLine1) {
+    //  ┌────────────┐
+    //  │            │
+    //  │            │
+    //  │            │
+    //  │            │ x
+    //  │            │x
+    //  │            x
+    //  │           x│
+    //  │          x │
+    //  └─────────x──┘
+    //           x
+
     return getEffectLeft(
       width,
       height,
       width,
       resBottom.pos[0],
       maxShadowWidth
-    )
+    );
   } else {
-    console.warn('invalid style result')
+    console.warn("invalid style result");
     return {
-      clipPathEffect: '',
-      clipPathFlipShadow: '',
-      clipPathFlip: '',
-      clipPathRemain: '',
-      boxShadow: '',
-      transformFlip: '',
-      transformEffect: ''
-    } satisfies EffectStyle
+      clipPathEffect: "",
+      clipPathFlipShadow: "",
+      clipPathFlip: "",
+      clipPathRemain: "",
+      boxShadow: "",
+      transformFlip: "",
+      transformEffect: "",
+    } satisfies EffectStyle;
   }
 };
-
 
 /**
  *
@@ -878,26 +961,26 @@ export const createEffectRight = (
   angle: number,
   maxShadowWidth: number
 ) => {
-  const angleLine = Math.PI / 2 + angle
-  const vector = pos(Math.cos(angleLine), Math.sin(angleLine))
-  const lineStart = pos(centerX, centerY)
-  const lineTo = posAdd(lineStart, vector)
-  const lineSplit = line(lineStart, lineTo)
+  const angleLine = Math.PI / 2 + angle;
+  const vector = pos(Math.cos(angleLine), Math.sin(angleLine));
+  const lineStart = pos(centerX, centerY);
+  const lineTo = posAdd(lineStart, vector);
+  const lineSplit = line(lineStart, lineTo);
 
-  const leftTop = pos(0, 0)
-  const leftBottom = pos(0, height)
-  const rightTop = pos(width, 0)
-  const rightBottom = pos(width, height)
+  const leftTop = pos(0, 0);
+  const leftBottom = pos(0, height);
+  const rightTop = pos(width, 0);
+  const rightBottom = pos(width, height);
 
-  const lineTop = line(leftTop, rightTop)
-  const lineRight = line(rightTop, rightBottom)
-  const lineBottom = line(rightBottom, leftBottom)
-  const lineLeft = line(leftBottom, leftTop)
+  const lineTop = line(leftTop, rightTop);
+  const lineRight = line(rightTop, rightBottom);
+  const lineBottom = line(rightBottom, leftBottom);
+  const lineLeft = line(leftBottom, leftTop);
 
-  const resTop = intersection(lineTop, lineSplit)
-  const resRight = intersection(lineRight, lineSplit)
-  const resBottom = intersection(lineBottom, lineSplit)
-  const resLeft = intersection(lineLeft, lineSplit)
+  const resTop = intersection(lineTop, lineSplit);
+  const resRight = intersection(lineRight, lineSplit);
+  const resBottom = intersection(lineBottom, lineSplit);
+  const resLeft = intersection(lineLeft, lineSplit);
 
   if (resTop?.hitLine1 && resRight?.hitLine1) {
     return getEffectRightTop(
@@ -906,7 +989,7 @@ export const createEffectRight = (
       resRight.pos[1],
       resTop.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
     return getEffectRight(
       width,
@@ -914,7 +997,7 @@ export const createEffectRight = (
       resTop.pos[0],
       resBottom.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resRight?.hitLine1 && resBottom?.hitLine1) {
     return getEffectRightBottom(
       width,
@@ -922,19 +1005,19 @@ export const createEffectRight = (
       resRight.pos[1],
       resBottom.pos[0],
       maxShadowWidth
-    )
+    );
   } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
-    // we clipped into from left to right incorrectly              
-    //   ┌─────────────┐    
-    //   │             │    
-    //   │             │    
-    //   │             xxxx 
-    //   │         xxxx│    
-    //   │     xxxx    │    
-    //   │ xxxx        │    
-    // xxxx            │    
-    //   │             │    
-    //   └─────────────┘    
+    // we clipped into from left to right incorrectly
+    //   ┌─────────────┐
+    //   │             │
+    //   │             │
+    //   │             xxxx
+    //   │         xxxx│
+    //   │     xxxx    │
+    //   │ xxxx        │
+    // xxxx            │
+    //   │             │
+    //   └─────────────┘
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
@@ -944,7 +1027,7 @@ export const createEffectRight = (
         resRight.pos[1],
         width,
         maxShadowWidth
-      )
+      );
     } else {
       return getEffectRightTop(
         width,
@@ -952,58 +1035,46 @@ export const createEffectRight = (
         resRight.pos[1],
         width,
         maxShadowWidth
-      )
+      );
     }
-  } else if (resTop?.hitLine1 && resLeft?.hitLine1) {                  
-    //       x            
-    // ┌──────x──────┐    
-    // │       x     │    
-    // │        x    │    
-    // │         x   │    
-    // │          x  │    
-    // │           x │    
-    // │            x│    
-    // │             x    
-    // │             │x   
-    // └─────────────┘ x  
-                                  
-    return getEffectRight(
-      width,
-      height,
-      resTop.pos[0],
-      0,
-      maxShadowWidth
-    )
-  } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {                    
-    //  ┌────────────┐    
-    //  │            │    
-    //  │            │    
-    //  │            │    
-    //  │            │ x  
-    //  │            │x   
-    //  │            x    
-    //  │           x│    
-    //  │          x │    
-    //  └─────────x──┘    
-    //           x        
-                     
-    return getEffectRight(
-      width,
-      height,
-      0,
-      resBottom.pos[0],
-      maxShadowWidth
-    )
+  } else if (resTop?.hitLine1 && resLeft?.hitLine1) {
+    //       x
+    // ┌──────x──────┐
+    // │       x     │
+    // │        x    │
+    // │         x   │
+    // │          x  │
+    // │           x │
+    // │            x│
+    // │             x
+    // │             │x
+    // └─────────────┘ x
+
+    return getEffectRight(width, height, resTop.pos[0], 0, maxShadowWidth);
+  } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {
+    //  ┌────────────┐
+    //  │            │
+    //  │            │
+    //  │            │
+    //  │            │ x
+    //  │            │x
+    //  │            x
+    //  │           x│
+    //  │          x │
+    //  └─────────x──┘
+    //           x
+
+    return getEffectRight(width, height, 0, resBottom.pos[0], maxShadowWidth);
   } else {
-    console.warn('invalid style result')
+    console.warn("invalid style result");
     return {
-      clipPathEffect: '',
-      clipPathFlipShadow: '',
-      clipPathFlip: '',
-      clipPathRemain: '',
-      boxShadow: '',
-      transformFlip: '',
-      transformEffect: ''
-    } satisfies EffectStyle
+      clipPathEffect: "",
+      clipPathFlipShadow: "",
+      clipPathFlip: "",
+      clipPathRemain: "",
+      boxShadow: "",
+      transformFlip: "",
+      transformEffect: "",
+    } satisfies EffectStyle;
   }
 };

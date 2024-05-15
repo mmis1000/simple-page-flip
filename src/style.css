@@ -5,7 +5,6 @@ html {
 .wrap {
   height: 100px;
   width: 100px;
-  margin: 4rem;
   margin-right: calc(100px + 4rem);
   display: inline-block;
   border: 1px solid red;
@@ -33,7 +32,7 @@ html {
   height: 400px;
   width: 300px;
   margin-right: calc(300px + 4rem);
-  margin-top: 150px;
+  /* margin-top: 150px; */
   margin-bottom: 150px;
 }
 .sample-book .item,
@@ -50,7 +49,7 @@ html {
   height: 400px;
   width: 300px;
   margin-left: calc(300px + 4rem);
-  margin-top: 150px;
+  /* margin-top: 150px; */
   margin-bottom: 150px;
 }
 .sample-book2 .item,
