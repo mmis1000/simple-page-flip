@@ -307,7 +307,7 @@ export const getEffectLeft = (
       ),
       3
     );
-  } else if (topOffset < bottomOffset) {
+  } else {
     newPolygon = insertLineToPolygon(
       newPolygon,
       line(
@@ -422,7 +422,7 @@ export const getEffectRight = (
       ),
       3
     );
-  } else if (width - topOffset < width - bottomOffset) {
+  } else {
     newPolygon = insertLineToPolygon(
       newPolygon,
       line(
