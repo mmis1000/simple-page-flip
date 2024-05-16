@@ -52,10 +52,14 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <label>
       <input id="sample-book5-max-angle" type="range" max="90" min="0" value="45" />
       Max angle
-    </label>
+    </label> <br>
     <label>
       <input id="sample-book5-y" type="range" max="100" min="0" value="100" />
       yPos
+    </label> <br>
+    <label>
+      <input id="progress" type="range" max="100" min="0" value="0" />
+      progress
     </label>
   </div>
   ${template('sample-book5')}
@@ -459,13 +463,22 @@ const updateDemoBook6 = (progress: number) => {
 };
 const fpxRatio = 1;
 
-const duration = 8000 * fpxRatio;
+const duration = 16000 * fpxRatio;
 const start = Date.now();
 
 let i = 0;
 
 let id: ReturnType<typeof requestAnimationFrame> | null = null;
 
+
+const updateProgress = (progress: number) => {
+  updateDemoBook(progress);
+  updateDemoBook2(progress);
+  updateDemoBook3(progress);
+  updateDemoBook4(progress);
+  updateDemoBook5(progress);
+  updateDemoBook6(progress);
+}
 const tick = () => {
   i++;
 
@@ -473,12 +486,7 @@ const tick = () => {
     const diff = Date.now() - start;
     const progress =
       (Math.sin((diff / duration) * 2 * Math.PI - Math.PI / 2) + 1) / 2;
-    updateDemoBook(progress);
-    updateDemoBook2(progress);
-    updateDemoBook3(progress);
-    updateDemoBook4(progress);
-    updateDemoBook5(progress);
-    updateDemoBook6(progress);
+      updateProgress(progress)
   }
   id = requestAnimationFrame(tick);
 };
@@ -493,3 +501,8 @@ document.getElementById("toggle")?.addEventListener("click", () => {
     id = null;
   }
 });
+
+document.querySelector('#progress')?.addEventListener('input', (ev) => {
+  const progress = Number((ev.currentTarget as HTMLInputElement).value) / 100
+  updateProgress(progress)
+})
