@@ -52,7 +52,9 @@ export const getEffectLeftTop = (
   const clipPathRemain = toClipPath(polygonRemain);
 
   const boxShadowWidth = Math.min(leftOffset, topOffset, maxShadowWidth);
-  const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
+  const boxShadow = `0px 0px ${toCSSNumber(
+    boxShadowWidth
+  )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posLeft, pos(0, 0)];
 
@@ -179,7 +181,9 @@ export const getEffectRightTop = (
     width - topOffset,
     maxShadowWidth
   );
-  const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
+  const boxShadow = `0px 0px ${toCSSNumber(
+    boxShadowWidth
+  )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posTop, posRight, pos(width, 0)];
 
@@ -567,7 +571,9 @@ export const getEffectLeftBottom = (
     bottomOffset,
     maxShadowWidth
   );
-  const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
+  const boxShadow = `0px 0px ${toCSSNumber(
+    boxShadowWidth
+  )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posBottom, posLeft, pos(0, height)];
 
@@ -697,7 +703,9 @@ export const getEffectRightBottom = (
     width - bottomOffset,
     maxShadowWidth
   );
-  const boxShadow = `0px 0px ${boxShadowWidth}px 0px rgba(0, 0, 0, 1)`;
+  const boxShadow = `0px 0px ${toCSSNumber(
+    boxShadowWidth
+  )}px 0px rgba(0, 0, 0, 1)`;
 
   const polygon = [posBottom, posRight, pos(width, height)];
 
