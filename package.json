@@ -1,17 +1,29 @@
 {
-  "name": "css-page-flip",
-  "private": true,
+  "name": "@mmis1000/simple-page-flip",
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/simple-page-flip.d.ts",
+      "default": "./dist/simple-page-flip.js",
+      "node": "./dist/simple-page-flip.umd.cjs"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmis1000/simple-page-flip.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-lib": "tsc && vite build -c vite.config.node.ts",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.1"
   },
   "dependencies": {
     "gl-matrix": "^3.4.3"
