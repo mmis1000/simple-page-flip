@@ -1,5 +1,7 @@
 html {
   background: #333;
+  font-family: sans-serif;
+  color: #eee;
 }
 
 .desk {
@@ -38,7 +40,6 @@ html {
   width: var(--WIDTH);
   background: #4f4fbb;
   color: white;
-  font-family: sans-serif;
   box-sizing: border-box;
   padding: 2rem;
 }

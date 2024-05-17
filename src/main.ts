@@ -51,9 +51,13 @@ const template = (className: string) => `
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <button id="toggle">pause/play</button> <br>
+  <h2>Left top to right bottom</h2>
   ${template('sample-book')}
+  <h2>Right top to left bottom</h2>
   ${template('sample-book2')}
+  <h2>Left bottom to right top</h2>
   ${template('sample-book3')}
+  <h2>Right bottom to left top</h2>
   ${template('sample-book4')}
   <div>
     <label>
@@ -437,7 +441,7 @@ const updateDemoBook5 = (progress: number) => {
   const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
   const targetAngle = 0
   const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
-  const currentCenter = ratio < 0 
+  const currentCenter = ratio < 0
     ? pos(WIDTH * progress, HEIGHT)
     : pos(WIDTH * progress, 0)
   const effect = createEffectLeft(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
@@ -461,7 +465,7 @@ const updateDemoBook6 = (progress: number) => {
   const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
   const targetAngle = 0
   const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
-  const currentCenter = ratio < 0 
+  const currentCenter = ratio < 0
     ? pos(WIDTH * (1 - progress), 0)
     : pos(WIDTH * (1 - progress), HEIGHT)
   const effect = createEffectRight(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
@@ -472,11 +476,12 @@ const fpxRatio = 1;
 
 const duration = 16000 * fpxRatio;
 const start = Date.now();
+let pausedAt = 0
+let timeOffset = 0
 
 let i = 0;
 
 let id: ReturnType<typeof requestAnimationFrame> | null = null;
-
 
 const updateProgress = (progress: number) => {
   updateDemoBook(progress);
@@ -490,10 +495,10 @@ const tick = () => {
   i++;
 
   if (i % fpxRatio === 0) {
-    const diff = Date.now() - start;
+    const diff = (Date.now() + timeOffset) - start;
     const progress =
       (Math.sin((diff / duration) * 2 * Math.PI - Math.PI / 2) + 1) / 2;
-      updateProgress(progress)
+    updateProgress(progress)
   }
   id = requestAnimationFrame(tick);
 };
@@ -502,14 +507,21 @@ id = requestAnimationFrame(tick);
 
 document.getElementById("toggle")?.addEventListener("click", () => {
   if (id == null) {
+    const continueAt = Date.now()
+    const diff = pausedAt - continueAt
+    timeOffset = diff
     id = requestAnimationFrame(tick);
   } else {
+    pausedAt = (Date.now() + timeOffset)
     cancelAnimationFrame(id);
     id = null;
   }
 });
 
-document.querySelector('#progress')?.addEventListener('input', (ev) => {
-  const progress = Number((ev.currentTarget as HTMLInputElement).value) / 100
-  updateProgress(progress)
-})
+document.querySelectorAll('#progress, #sample-book5-max-angle, #sample-book5-y')
+  .forEach(e => {
+    e.addEventListener('input', (ev) => {
+      const progress = Number(document.querySelector<HTMLInputElement>('#progress')!.value) / 100
+      updateProgress(progress)
+    })
+  })
