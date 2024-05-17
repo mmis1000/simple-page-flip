@@ -510,6 +510,9 @@ document.querySelectorAll(".toggle").forEach(e => e.addEventListener("click", ()
     pausedAt = (Date.now() + timeOffset)
     cancelAnimationFrame(id);
     id = null;
+
+    const progress = Number(document.querySelector<HTMLInputElement>('#progress')!.value) / 100
+    updateProgress(progress)
   }
 }));
 
