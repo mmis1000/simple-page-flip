@@ -863,7 +863,10 @@ export const getEffectRightBottom = (
       transform: transform,
       clipPath: clipPathFlip
     },
-    flipEffect: {
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
       transform: transformEffect,
       clipPath: clipPathEffect
     },
