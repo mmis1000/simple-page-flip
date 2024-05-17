@@ -13,30 +13,37 @@ import {
 } from "./utils/effects.ts";
 
 const template = (className: string) => `
-<div class="wrap ${className}">
-  <div class="item-layer layer-under">
-    <div class="item-wrap">
-      <div class="item">Text Text Text Text </div>
+<div class="desk">
+  <div class="wrap ${className}">
+    <div class="item-layer layer-under">
+      <div class="item-wrap">
+        <div class="item">
+          <div class="text-placeholder"></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="item-layer layer-crop">
-    <div class="item-wrap masked-back">
-      <div class="item">Text Text Text Text </div>
+    <div class="item-layer layer-flip-front">
+      <div class="item-wrap masked-back">
+        <div class="item">
+          The<br>
+          &nbsp&nbspBook Title
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="item-layer layer-shadow">
-    <div class="item-wrap transformed-front shadowed-front masked-shadow">
-      <div class="item"></div>
+    <div class="item-layer layer-shadow">
+      <div class="item-wrap transformed-front shadowed-front masked-shadow">
+        <div class="item"></div>
+      </div>
     </div>
-  </div>
-  <div class="item-layer layer-flip">
-    <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="transform: scaleX(-1)">Text Text Text Text </div>
+    <div class="item-layer layer-flip-back">
+      <div class="item-wrap transformed-front masked-front">
+        <div class="item"><div class="text-placeholder"></div></div>
+      </div>
     </div>
-  </div>
-  <div class="item-layer layer-effect">
-    <div class="item-wrap transformed-effect masked-effect">
-      <div class="item"></div>
+    <div class="item-layer layer-effect">
+      <div class="item-wrap transformed-effect masked-effect">
+        <div class="item"></div>
+      </div>
     </div>
   </div>
 </div>

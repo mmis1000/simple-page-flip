@@ -2,15 +2,21 @@ html {
   background: #333;
 }
 
+.desk {
+  display: inline-block;
+  padding: 4rem;
+  overflow: hidden;
+  background: repeating-linear-gradient(100deg, #faddab 0%, #faddab 1.5%, #e7b870 2%, #e7b870 2.5%, #faddab 3%);
+  margin: 1rem 0;
+}
+
 .wrap {
   --HEIGHT: 400px;
   --WIDTH: 300px;
   height: var(--HEIGHT);
   width: calc(var(--WIDTH) * 2);
-  display: inline-block;
   /* border: 1px solid red; */
   position: relative;
-  margin: 4rem;
 }
 
 .item-layer {
@@ -37,9 +43,9 @@ html {
   padding: 2rem;
 }
 
-.layer-flip .item,
+.layer-flip-back .item,
 .layer-under .item {
-  background: #eee;
+  background: #e7e7e7;
   color: #333;
 }
 
@@ -47,6 +53,10 @@ html {
 .sample-book4 .item-layer,
 .sample-book6 .item-layer{
   left: var(--WIDTH);
+}
+
+.layer-flip-back .item {
+  transform: scaleX(-1)
 }
 
 
@@ -60,4 +70,21 @@ html {
 
 .layer-effect .item {
   background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.3) 30%, rgba(0, 0, 0, 0))
+}
+
+.layer-flip-front .item {
+  font-size: 2rem;
+  line-height: 1.5;
+}
+
+.layer-under .item,
+.layer-flip-back .item {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.text-placeholder {
+  flex: 1 1 auto;
+  background: repeating-linear-gradient(180deg, transparent, transparent 3.5%, #ccc 3.5%, #ccc 6.5%, transparent 6.5%, transparent 10%);
 }
