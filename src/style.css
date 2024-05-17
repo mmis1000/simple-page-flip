@@ -1,75 +1,61 @@
 html {
-  background: #aaa;
+  background: #333;
 }
 
 .wrap {
-  height: 100px;
-  width: 100px;
-  margin-right: calc(100px + 4rem);
+  --HEIGHT: 400px;
+  --WIDTH: 300px;
+  height: var(--HEIGHT);
+  width: calc(var(--WIDTH) * 2);
   display: inline-block;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   position: relative;
+  margin: 4rem;
 }
-.item-mask {
+
+.item-layer {
   position: absolute;
   left: 0;
   top: 0;
+  pointer-events: none;
 }
 
 .item-wrap {
+  height: var(--HEIGHT);
+  width: var(--WIDTH);
+  pointer-events: all;
   transform-origin: 0 0;
 }
 
 .item {
-  height: 100px;
-  width: 100px;
-  background: #7777ff;
+  height: var(--HEIGHT);
+  width: var(--WIDTH);
+  background: #4f4fbb;
+  color: white;
+  font-family: sans-serif;
+  box-sizing: border-box;
+  padding: 2rem;
 }
 
-.sample-book.wrap,
-.sample-book3.wrap,
-.sample-book5.wrap {
-  height: 400px;
-  width: 300px;
-  margin-right: calc(300px + 4rem);
-  /* margin-top: 150px; */
-  margin-bottom: 150px;
-}
-.sample-book .item,
-.sample-book3 .item,
-.sample-book5 .item{
-  height: 400px;
-  width: 300px;
+.layer-flip .item,
+.layer-under .item {
+  background: #eee;
+  color: #333;
 }
 
+.sample-book2 .item-layer,
+.sample-book4 .item-layer,
+.sample-book6 .item-layer{
+  left: var(--WIDTH);
+}
 
-.sample-book2.wrap,
-.sample-book4.wrap,
-.sample-book6.wrap {
-  height: 400px;
-  width: 300px;
-  margin-left: calc(300px + 4rem);
-  /* margin-top: 150px; */
-  margin-bottom: 150px;
-}
-.sample-book2 .item,
-.sample-book4 .item,
-.sample-book6 .item {
-  height: 400px;
-  width: 300px;
-}
 
 .layer-shadow .item {
   background: transparent !important;
 }
+
 .layer-shadow {
   filter: blur(2px);
-}
-
-.colorStrip {
-  width: 100px;
-  height: 100px;
-  background: red;
 }
 
 .layer-effect .item {

@@ -14,27 +14,27 @@ import {
 
 const template = (className: string) => `
 <div class="wrap ${className}">
-  <div class="item-mask">
+  <div class="item-layer layer-under">
     <div class="item-wrap">
-      <div class="item" style="background: lightBlue">Text Text Text Text </div>
+      <div class="item">Text Text Text Text </div>
     </div>
   </div>
-  <div class="item-mask">
+  <div class="item-layer layer-crop">
     <div class="item-wrap masked-back">
       <div class="item">Text Text Text Text </div>
     </div>
   </div>
-  <div class="item-mask layer-shadow">
+  <div class="item-layer layer-shadow">
     <div class="item-wrap transformed-front shadowed-front masked-shadow">
       <div class="item"></div>
     </div>
   </div>
-  <div class="item-mask">
+  <div class="item-layer layer-flip">
     <div class="item-wrap transformed-front masked-front">
-      <div class="item" style="background: lightBlue; transform: scaleX(-1)">Text Text Text Text </div>
+      <div class="item" style="transform: scaleX(-1)">Text Text Text Text </div>
     </div>
   </div>
-  <div class="item-mask layer-effect">
+  <div class="item-layer layer-effect">
     <div class="item-wrap transformed-effect masked-effect">
       <div class="item"></div>
     </div>
