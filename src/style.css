@@ -89,3 +89,21 @@ html {
   flex: 1 1 auto;
   background: repeating-linear-gradient(180deg, transparent, transparent 3.5%, #ccc 3.5%, #ccc 6.5%, transparent 6.5%, transparent 10%);
 }
+
+.toggle {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  padding: 0 1rem;
+  background: #eee;
+  border: 0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+label {
+
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}

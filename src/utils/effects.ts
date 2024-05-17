@@ -20,13 +20,10 @@ import * as glMatrix from "gl-matrix";
 const SHADOW_SIZE_TOLERANCE = 1.3;
 
 export interface EffectStyle {
-  clipPathRemain: string;
-  clipPathFlipShadow: string;
-  clipPathFlip: string;
-  clipPathEffect: string;
-  boxShadow: string;
-  transformFlip: string;
-  transformEffect: string;
+  flipFront: Partial<CSSStyleDeclaration>
+  flipBack: Partial<CSSStyleDeclaration>
+  flipShadow: Partial<CSSStyleDeclaration>
+  flipEffect: Partial<CSSStyleDeclaration>
 }
 
 export const getEffectLeftTop = (
@@ -145,13 +142,25 @@ export const getEffectLeftTop = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlipShadow,
-    clipPathFlip,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 export const getEffectRightTop = (
@@ -274,13 +283,25 @@ export const getEffectRightTop = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlip,
-    clipPathFlipShadow,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 export const getEffectLeft = (
@@ -404,13 +425,25 @@ export const getEffectLeft = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlipShadow,
-    clipPathFlip,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 export const getEffectRight = (
@@ -535,13 +568,25 @@ export const getEffectRight = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlipShadow,
-    clipPathFlip,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 export const getEffectLeftBottom = (
@@ -667,13 +712,25 @@ export const getEffectLeftBottom = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlip,
-    clipPathFlipShadow,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: matrixEffect.includes(NaN) ? {
+      display: 'none'
+    } : {
+      display: '',
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 export const getEffectRightBottom = (
@@ -799,13 +856,22 @@ export const getEffectRightBottom = (
   const clipPathEffect = toClipPath(effectPolygon);
 
   return {
-    clipPathRemain,
-    clipPathFlip,
-    clipPathFlipShadow,
-    clipPathEffect,
-    boxShadow,
-    transformFlip: transform,
-    transformEffect,
+    flipFront: {
+      clipPath: clipPathRemain
+    },
+    flipBack: {
+      transform: transform,
+      clipPath: clipPathFlip
+    },
+    flipEffect: {
+      transform: transformEffect,
+      clipPath: clipPathEffect
+    },
+    flipShadow: {
+      boxShadow: boxShadow,
+      transform: transform,
+      clipPath: clipPathFlipShadow
+    }
   };
 };
 
@@ -939,14 +1005,16 @@ export const createEffectLeft = (
     );
   } else {
     console.warn("invalid style result");
+    
     return {
-      clipPathEffect: "",
-      clipPathFlipShadow: "",
-      clipPathFlip: "",
-      clipPathRemain: "",
-      boxShadow: "",
-      transformFlip: "",
-      transformEffect: "",
+      flipFront: {
+      },
+      flipBack: {
+      },
+      flipEffect: {
+      },
+      flipShadow: {
+      }
     } satisfies EffectStyle;
   }
 };
@@ -1076,13 +1144,22 @@ export const createEffectRight = (
   } else {
     console.warn("invalid style result");
     return {
-      clipPathEffect: "",
-      clipPathFlipShadow: "",
-      clipPathFlip: "",
-      clipPathRemain: "",
-      boxShadow: "",
-      transformFlip: "",
-      transformEffect: "",
+      flipFront: {
+        clipPath: 'none'
+      },
+      flipBack: {
+        transform: 'none',
+        clipPath: 'none'
+      },
+      flipEffect: {
+        transform: 'none',
+        clipPath: 'none'
+      },
+      flipShadow: {
+        boxShadow: 'none',
+        transform: 'none',
+        clipPath: 'none'
+      }
     } satisfies EffectStyle;
   }
 };

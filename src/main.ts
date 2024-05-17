@@ -23,7 +23,7 @@ const template = (className: string) => `
       </div>
     </div>
     <div class="item-layer layer-flip-front">
-      <div class="item-wrap masked-back">
+      <div class="item-wrap">
         <div class="item">
           The<br>
           &nbsp&nbspBook Title
@@ -31,17 +31,17 @@ const template = (className: string) => `
       </div>
     </div>
     <div class="item-layer layer-shadow">
-      <div class="item-wrap transformed-front shadowed-front masked-shadow">
+      <div class="item-wrap">
         <div class="item"></div>
       </div>
     </div>
     <div class="item-layer layer-flip-back">
-      <div class="item-wrap transformed-front masked-front">
+      <div class="item-wrap">
         <div class="item"><div class="text-placeholder"></div></div>
       </div>
     </div>
     <div class="item-layer layer-effect">
-      <div class="item-wrap transformed-effect masked-effect">
+      <div class="item-wrap">
         <div class="item"></div>
       </div>
     </div>
@@ -50,7 +50,8 @@ const template = (className: string) => `
 `
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <button id="toggle">pause/play</button> <br>
+  <h1>Flip effects</h1>
+  <button class="toggle">Pause</button> <br>
   <h2>Left top to right bottom</h2>
   ${template('sample-book')}
   <h2>Right top to left bottom</h2>
@@ -60,12 +61,17 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h2>Right bottom to left top</h2>
   ${template('sample-book4')}
   <div>
+    <button class="toggle">Pause</button> <br>
     <label>
-      <input id="sample-book5-max-angle" type="range" max="90" min="0" value="45" />
-      Max angle
+      <input id="sample-book-initial-angle" type="range" max="90" min="0" value="45" />
+      Initial angle
     </label> <br>
     <label>
-      <input id="sample-book5-y" type="range" max="100" min="0" value="100" />
+      <input id="sample-book-target-angle" type="range" max="90" min="0" value="0" />
+      Target angle
+    </label> <br>
+    <label>
+      <input id="sample-book-y" type="range" max="100" min="0" value="100" />
       yPos
     </label> <br>
     <label>
@@ -73,7 +79,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       progress
     </label>
   </div>
+  <h2>Integrated left to right</h2>
   ${template('sample-book5')}
+  <h2>Integrated right to left</h2>
   ${template('sample-book6')}
 `;
 
@@ -85,39 +93,24 @@ type EffectStep = [
 
 const applyStyle = (rootSelector: string, style: EffectStyle) => {
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .shadowed-front")
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-front .item-wrap")
     .forEach((i) => {
-      i.style.boxShadow = style.boxShadow;
+      Object.assign(i.style, style.flipFront)
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-back")
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-back .item-wrap")
     .forEach((i) => {
-      i.style.clipPath = style.clipPathRemain;
+      Object.assign(i.style, style.flipBack)
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-shadow")
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-shadow .item-wrap")
     .forEach((i) => {
-      i.style.clipPath = style.clipPathFlipShadow;
+      Object.assign(i.style, style.flipShadow)
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-front")
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-effect .item-wrap")
     .forEach((i) => {
-      i.style.clipPath = style.clipPathFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .masked-effect")
-    .forEach((i) => {
-      i.style.clipPath = style.clipPathEffect;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .transformed-front")
-    .forEach((i) => {
-      i.style.transform = style.transformFlip;
-    });
-  document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .transformed-effect")
-    .forEach((i) => {
-      i.style.transform = style.transformEffect + ' translateZ(0px)';
+      Object.assign(i.style, style.flipEffect)
     });
 }
 
@@ -431,15 +424,15 @@ const updateDemoBook5 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book5";
 
-  const valueMaxAngle = Number(document.querySelector<HTMLInputElement>('#sample-book5-max-angle')?.value)
+  const valueInitialAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-initial-angle')?.value)
+  const valueTargetAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-target-angle')?.value)
 
-
-  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book5-y')?.value)
+  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book-y')?.value)
 
   const ratio = (valuePos - 50) / 50 * -1
 
-  const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
-  const targetAngle = 0
+  const initialAngle = (Math.PI * 2) / 360 * valueInitialAngle * ratio
+  const targetAngle = (Math.PI * 2) / 360 * -valueTargetAngle * ratio
   const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
   const currentCenter = ratio < 0
     ? pos(WIDTH * progress, HEIGHT)
@@ -455,15 +448,15 @@ const updateDemoBook6 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book6";
 
-  const valueMaxAngle = Number(document.querySelector<HTMLInputElement>('#sample-book5-max-angle')?.value)
+  const valueInitialAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-initial-angle')?.value)
+  const valueTargetAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-target-angle')?.value)
 
-
-  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book5-y')?.value)
+  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book-y')?.value)
 
   const ratio = (valuePos - 50) / 50 * 1
 
-  const initialAngle = (Math.PI * 2) / 360 * valueMaxAngle * ratio
-  const targetAngle = 0
+  const initialAngle = (Math.PI * 2) / 360 * valueInitialAngle * ratio
+  const targetAngle = (Math.PI * 2) / 360 * -valueTargetAngle * ratio
   const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
   const currentCenter = ratio < 0
     ? pos(WIDTH * (1 - progress), 0)
@@ -505,22 +498,24 @@ const tick = () => {
 
 id = requestAnimationFrame(tick);
 
-document.getElementById("toggle")?.addEventListener("click", () => {
+document.querySelectorAll(".toggle").forEach(e => e.addEventListener("click", () => {
   if (id == null) {
+    document.querySelectorAll(".toggle").forEach(i => i.textContent = 'Pause')
     const continueAt = Date.now()
     const diff = pausedAt - continueAt
     timeOffset = diff
     id = requestAnimationFrame(tick);
   } else {
+    document.querySelectorAll(".toggle").forEach(i => i.textContent = 'Play')
     pausedAt = (Date.now() + timeOffset)
     cancelAnimationFrame(id);
     id = null;
   }
-});
+}));
 
-document.querySelectorAll('#progress, #sample-book5-max-angle, #sample-book5-y')
+document.querySelectorAll('#progress, #sample-book-initial-angle, #sample-book-target-angle, #sample-book-y')
   .forEach(e => {
-    e.addEventListener('input', (ev) => {
+    e.addEventListener('input', () => {
       const progress = Number(document.querySelector<HTMLInputElement>('#progress')!.value) / 100
       updateProgress(progress)
     })
