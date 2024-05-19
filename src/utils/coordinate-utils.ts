@@ -86,28 +86,30 @@ export function genReflectMatrix(p1: Pos, p2: Pos) {
   return genMatrix(p1, p2, p3 as Pos, p1, p2, p3r as Pos);
 }
 
-export function toCSSMatrix(transformMatrix: glMatrix.mat3) {
-  const transposed = glMatrix.mat3.create();
-  glMatrix.mat3.transpose(transposed, transformMatrix);
-
+export function toCSSMatrix(width: number, height: number, transformMatrix: glMatrix.mat3) {
   const transposed2dMatrix = [
-    transposed[0],
-    transposed[1],
-    transposed[3],
-    transposed[4],
-    transposed[6],
-    transposed[7]
+    transformMatrix[0],
+    transformMatrix[3],
+    transformMatrix[1],
+    transformMatrix[4],
+    transformMatrix[2],
+    transformMatrix[5]
   ];
 
-  const transform = `matrix(${[...transposed2dMatrix]
+  const deform = `matrix(${[...transposed2dMatrix.slice(0, 4)]
     .map(toCSSNumber)
-    .join(", ")})`;
+    .join(", ")},0,0)`
+
+
+  const move = `translate(${toCSSNumber(transposed2dMatrix[4] / width * 100)}%, ${toCSSNumber(transposed2dMatrix[5] / height * 100)}%)`
+
+  const transform = `${move} ${deform}`;
 
   return transform;
 }
 
-export function genReflectCSSMatrix(p1: Pos, p2: Pos) {
-  return toCSSMatrix(genReflectMatrix(p1, p2));
+export function genReflectCSSMatrix(width: number, height: number, p1: Pos, p2: Pos) {
+  return toCSSMatrix(width, height, genReflectMatrix(p1, p2));
 }
 
 export const line = (p1: Pos, p2: Pos): Line => {
@@ -330,8 +332,8 @@ export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number
   result.splice(targetPoint, 1, pos(newPointA[0], newPointA[1]), pos(newPointB[0], newPointB[1]));
   return result;
 }
-export function toClipPath(poss: Pos[]) {
+export function toClipPath(width: number, height: number, poss: Pos[]) {
   return `polygon(${poss
-    .map((i) => `${toCSSNumber(i[0])}px ${toCSSNumber(i[1])}px`)
+    .map((i) => `${toCSSNumber(i[0] / width * 100)}% ${toCSSNumber(i[1] / height * 100)}%`)
     .join(", ")})`;
 }
