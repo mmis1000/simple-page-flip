@@ -12,6 +12,16 @@ import {
   getEffectRightTop,
 } from "./utils/effects.ts";
 
+import GUI from "lil-gui";
+
+const values = {
+  progress: 0,
+  initialAngle: 45,
+  targetAngle: 0,
+  yPos: 100,
+  autoPlay: true,
+};
+
 const template = (className: string) => `
 <div class="desk">
   <div class="wrap ${className}">
@@ -47,42 +57,36 @@ const template = (className: string) => `
     </div>
   </div>
 </div>
-`
+`;
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Flip effects</h1>
-  <button class="toggle">Pause</button> <br>
-  <h2>Left top to right bottom</h2>
-  ${template('sample-book')}
-  <h2>Right top to left bottom</h2>
-  ${template('sample-book2')}
-  <h2>Left bottom to right top</h2>
-  ${template('sample-book3')}
-  <h2>Right bottom to left top</h2>
-  ${template('sample-book4')}
-  <div>
-    <button class="toggle">Pause</button> <br>
-    <label>
-      <input id="sample-book-initial-angle" type="range" max="90" min="0" value="45" />
-      Initial angle
-    </label> <br>
-    <label>
-      <input id="sample-book-target-angle" type="range" max="90" min="0" value="0" />
-      Target angle
-    </label> <br>
-    <label>
-      <input id="sample-book-y" type="range" max="100" min="0" value="100" />
-      yPos
-    </label> <br>
-    <label>
-      <input id="progress" type="range" max="100" min="0" value="0" />
-      progress
-    </label>
+  <div class="demos">
+    <div class="demo">
+      <h2>Left top to right bottom only</h2>
+      ${template("sample-book")}
+    </div>
+    <div class="demo">
+      <h2>Right top to left bottom only</h2>
+      ${template("sample-book2")}
+    </div>
+    <div class="demo">
+      <h2>Left bottom to right top only</h2>
+      ${template("sample-book3")}
+    </div>
+    <div class="demo">
+      <h2>Right bottom to left top only</h2>
+      ${template("sample-book4")}
+    </div>
+    <div class="demo">
+      <h2>Full left to right</h2>
+      ${template("sample-book5")}
+    </div>
+    <div class="demo">
+      <h2>Full right to left</h2>
+      ${template("sample-book6")}
+    </div>
   </div>
-  <h2>Integrated left to right</h2>
-  ${template('sample-book5')}
-  <h2>Integrated right to left</h2>
-  ${template('sample-book6')}
 `;
 
 type EffectStep = [
@@ -93,29 +97,37 @@ type EffectStep = [
 
 const applyStyle = (rootSelector: string, style: EffectStyle) => {
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-front .item-wrap")
+    .querySelectorAll<HTMLDivElement>(
+      rootSelector + " .layer-flip-front .item-wrap"
+    )
     .forEach((i) => {
-      Object.assign(i.style, style.flipFront)
+      Object.assign(i.style, style.flipFront);
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-back .item-wrap")
+    .querySelectorAll<HTMLDivElement>(
+      rootSelector + " .layer-flip-back .item-wrap"
+    )
     .forEach((i) => {
-      Object.assign(i.style, style.flipBack)
+      Object.assign(i.style, style.flipBack);
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-shadow .item-wrap")
+    .querySelectorAll<HTMLDivElement>(
+      rootSelector + " .layer-shadow .item-wrap"
+    )
     .forEach((i) => {
-      Object.assign(i.style, style.flipShadow)
+      Object.assign(i.style, style.flipShadow);
     });
   document
-    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-effect .item-wrap")
+    .querySelectorAll<HTMLDivElement>(
+      rootSelector + " .layer-effect .item-wrap"
+    )
     .forEach((i) => {
-      Object.assign(i.style, style.flipEffect)
+      Object.assign(i.style, style.flipEffect);
     });
-}
+};
 
 const updateBook = (root: string, progress: number, timeline: EffectStep[]) => {
-  let style: EffectStyle | null = null
+  let style: EffectStyle | null = null;
 
   for (let item of timeline) {
     if (item[0] <= progress && progress <= item[1]) {
@@ -126,7 +138,7 @@ const updateBook = (root: string, progress: number, timeline: EffectStep[]) => {
   }
 
   if (style != null) {
-    applyStyle(root, style)
+    applyStyle(root, style);
   }
 };
 
@@ -424,22 +436,26 @@ const updateDemoBook5 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book5";
 
-  const valueInitialAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-initial-angle')?.value)
-  const valueTargetAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-target-angle')?.value)
+  const valueInitialAngle = values.initialAngle;
+  const valueTargetAngle = values.targetAngle;
+  const valuePos = values.yPos;
 
-  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book-y')?.value)
+  const ratio = ((valuePos - 50) / 50) * -1;
 
-  const ratio = (valuePos - 50) / 50 * -1
-
-  const initialAngle = (Math.PI * 2) / 360 * valueInitialAngle * ratio
-  const targetAngle = (Math.PI * 2) / 360 * -valueTargetAngle * ratio
-  const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
-  const currentCenter = ratio < 0
-    ? pos(WIDTH * progress, HEIGHT)
-    : pos(WIDTH * progress, 0)
-  const effect = createEffectLeft(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
-  applyStyle(ROOT, effect)
-
+  const initialAngle = ((Math.PI * 2) / 360) * valueInitialAngle * ratio;
+  const targetAngle = ((Math.PI * 2) / 360) * -valueTargetAngle * ratio;
+  const currentAngle = targetAngle * progress + initialAngle * (1 - progress);
+  const currentCenter =
+    ratio < 0 ? pos(WIDTH * progress, HEIGHT) : pos(WIDTH * progress, 0);
+  const effect = createEffectLeft(
+    WIDTH,
+    HEIGHT,
+    currentCenter[0],
+    currentCenter[1],
+    currentAngle,
+    SHADOW
+  );
+  applyStyle(ROOT, effect);
 };
 
 const updateDemoBook6 = (progress: number) => {
@@ -448,29 +464,35 @@ const updateDemoBook6 = (progress: number) => {
   const SHADOW = 30;
   const ROOT = ".sample-book6";
 
-  const valueInitialAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-initial-angle')?.value)
-  const valueTargetAngle = Number(document.querySelector<HTMLInputElement>('#sample-book-target-angle')?.value)
+  const valueInitialAngle = values.initialAngle;
+  const valueTargetAngle = values.targetAngle;
+  const valuePos = values.yPos;
 
-  const valuePos = Number(document.querySelector<HTMLInputElement>('#sample-book-y')?.value)
+  const ratio = ((valuePos - 50) / 50) * 1;
 
-  const ratio = (valuePos - 50) / 50 * 1
-
-  const initialAngle = (Math.PI * 2) / 360 * valueInitialAngle * ratio
-  const targetAngle = (Math.PI * 2) / 360 * -valueTargetAngle * ratio
-  const currentAngle = targetAngle * progress + initialAngle * (1 - progress)
-  const currentCenter = ratio < 0
-    ? pos(WIDTH * (1 - progress), 0)
-    : pos(WIDTH * (1 - progress), HEIGHT)
-  const effect = createEffectRight(WIDTH, HEIGHT, currentCenter[0], currentCenter[1], currentAngle, SHADOW)
-  applyStyle(ROOT, effect)
-
+  const initialAngle = ((Math.PI * 2) / 360) * valueInitialAngle * ratio;
+  const targetAngle = ((Math.PI * 2) / 360) * -valueTargetAngle * ratio;
+  const currentAngle = targetAngle * progress + initialAngle * (1 - progress);
+  const currentCenter =
+    ratio < 0
+      ? pos(WIDTH * (1 - progress), 0)
+      : pos(WIDTH * (1 - progress), HEIGHT);
+  const effect = createEffectRight(
+    WIDTH,
+    HEIGHT,
+    currentCenter[0],
+    currentCenter[1],
+    currentAngle,
+    SHADOW
+  );
+  applyStyle(ROOT, effect);
 };
 const fpxRatio = 1;
 
 const duration = 16000 * fpxRatio;
 const start = Date.now();
-let pausedAt = 0
-let timeOffset = 0
+let pausedAt = 0;
+let timeOffset = 0;
 
 let i = 0;
 
@@ -483,43 +505,61 @@ const updateProgress = (progress: number) => {
   updateDemoBook4(progress);
   updateDemoBook5(progress);
   updateDemoBook6(progress);
-}
+};
+
 const tick = () => {
   i++;
 
   if (i % fpxRatio === 0) {
-    const diff = (Date.now() + timeOffset) - start;
+    const diff = Date.now() + timeOffset - start;
     const progress =
       (Math.sin((diff / duration) * 2 * Math.PI - Math.PI / 2) + 1) / 2;
-    updateProgress(progress)
+    updateProgress(progress);
+    progressWidget.setValue(Math.round(progress * 100));
   }
   id = requestAnimationFrame(tick);
 };
 
 id = requestAnimationFrame(tick);
 
-document.querySelectorAll(".toggle").forEach(e => e.addEventListener("click", () => {
-  if (id == null) {
-    document.querySelectorAll(".toggle").forEach(i => i.textContent = 'Pause')
-    const continueAt = Date.now()
-    const diff = pausedAt - continueAt
-    timeOffset = diff
+function togglePlay(v: boolean) {
+  if (v) {
+    const continueAt = Date.now();
+    const diff = pausedAt - continueAt;
+    timeOffset = diff;
     id = requestAnimationFrame(tick);
   } else {
-    document.querySelectorAll(".toggle").forEach(i => i.textContent = 'Play')
-    pausedAt = (Date.now() + timeOffset)
-    cancelAnimationFrame(id);
+    pausedAt = Date.now() + timeOffset;
+    if (id != null) cancelAnimationFrame(id);
     id = null;
 
-    const progress = Number(document.querySelector<HTMLInputElement>('#progress')!.value) / 100
-    updateProgress(progress)
+    updateProgress(values.progress / 100);
   }
-}));
+}
 
-document.querySelectorAll('#progress, #sample-book-initial-angle, #sample-book-target-angle, #sample-book-y')
-  .forEach(e => {
-    e.addEventListener('input', () => {
-      const progress = Number(document.querySelector<HTMLInputElement>('#progress')!.value) / 100
-      updateProgress(progress)
-    })
-  })
+const gui = new GUI();
+gui.add(values, "autoPlay").name("Auto Play").onChange(togglePlay);
+
+const updateDisplayWhenNotAutoPlay = () => {
+  if (!values.autoPlay) {
+    updateProgress(values.progress / 100);
+  }
+};
+
+const progressWidget = gui
+  .add(values, "progress", 0, 100)
+  .onChange(updateDisplayWhenNotAutoPlay);
+const fullExampleFolder = gui.addFolder("Full example options");
+
+fullExampleFolder
+  .add(values, "initialAngle", 0, 90)
+  .name("initial angle")
+  .onChange(updateDisplayWhenNotAutoPlay);
+fullExampleFolder
+  .add(values, "targetAngle", 0, 90)
+  .name("target angle")
+  .onChange(updateDisplayWhenNotAutoPlay);
+fullExampleFolder
+  .add(values, "yPos", 0, 100)
+  .name("y pos")
+  .onChange(updateDisplayWhenNotAutoPlay);

@@ -25,3 +25,6 @@ dist-ssr
 
 # test arcieve
 *.tgz
+
+docs/.vitepress/dist
+docs/.vitepress/cache

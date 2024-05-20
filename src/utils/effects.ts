@@ -39,9 +39,9 @@ const formatStyle = (
 ): EffectStyle => {
   const transformFlip = toCSSMatrix(width, height, matrixFlip);
   const clipPathRemain = toClipPath(width, height, polygonRemain);
-  const boxShadow = `0px 0px ${toCSSNumber(
+  const boxShadow = `0px 0px calc(var(--scale-px, 1px) * ${toCSSNumber(
     boxShadowWidth
-  )}px 0px rgba(0, 0, 0, 1)`;
+  )}) 0px rgba(0, 0, 0, 1)`;
   const clipPathFlip = toClipPath(width, height, polygonFlip);
   const clipPathFlipShadow = toClipPath(width, height, polygonFlipShadow);
   const transformEffect = toCSSMatrix(width, height, matrixEffect);

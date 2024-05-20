@@ -5,43 +5,47 @@ html {
 }
 
 .desk {
-  display: inline-block;
-  padding: 4rem;
+  padding: 10%;
   overflow: hidden;
   background: repeating-linear-gradient(100deg, #faddab 0%, #faddab 1.5%, #e7b870 2%, #e7b870 2.5%, #faddab 3%);
   margin: 1rem 0;
 }
 
 .wrap {
-  --HEIGHT: 400px;
-  --WIDTH: 300px;
-  height: var(--HEIGHT);
-  width: calc(var(--WIDTH) * 2);
-  /* border: 1px solid red; */
+  --HEIGHT: 400;
+  --WIDTH: 300;
+
+  aspect-ratio: calc(1 / var(--HEIGHT) * var(--WIDTH) * 2);
+
+  container-type: size;
+  --scale-px: calc(100cqw / var(--WIDTH) * 0.5);
+
   position: relative;
 }
 
 .item-layer {
   position: absolute;
+  height: calc(var(--scale-px, 1px) * var(--HEIGHT));
+  width: calc(var(--scale-px, 1px) * var(--WIDTH));
   left: 0;
   top: 0;
   pointer-events: none;
 }
 
 .item-wrap {
-  height: var(--HEIGHT);
-  width: var(--WIDTH);
+  height: calc(var(--scale-px, 1px) * var(--HEIGHT));
+  width: calc(var(--scale-px, 1px) * var(--WIDTH));
   pointer-events: all;
   transform-origin: 0 0;
 }
 
 .item {
-  height: var(--HEIGHT);
-  width: var(--WIDTH);
+  height: calc(var(--scale-px, 1px) * var(--HEIGHT));
+  width: calc(var(--scale-px, 1px) * var(--WIDTH));
   background: #4f4fbb;
   color: white;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: calc(100% / var(--HEIGHT) * 32);
 }
 
 .layer-flip-back .item,
@@ -53,7 +57,7 @@ html {
 .sample-book2 .item-layer,
 .sample-book4 .item-layer,
 .sample-book6 .item-layer{
-  left: var(--WIDTH);
+  left: calc(var(--scale-px, 1px) * var(--WIDTH));
 }
 
 .layer-flip-back .item {
@@ -74,7 +78,7 @@ html {
 }
 
 .layer-flip-front .item {
-  font-size: 2rem;
+  font-size: calc(var(--scale-px, 1px) * 32);
   line-height: 1.5;
 }
 
@@ -90,20 +94,8 @@ html {
   background: repeating-linear-gradient(180deg, transparent, transparent 3.5%, #ccc 3.5%, #ccc 6.5%, transparent 6.5%, transparent 10%);
 }
 
-.toggle {
-  height: 2.5rem;
-  line-height: 2.5rem;
-  padding: 0 1rem;
-  background: #eee;
-  border: 0;
-  border-radius: 8px;
-  font-size: 1.1rem;
-}
-
-label {
-
-  height: 2.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
+.demos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, auto));
+  gap: 1rem;
 }

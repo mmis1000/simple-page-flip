@@ -11,8 +11,8 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       // Could also be a dictionary or array of multiple entry points
-      entry: resolve(__dirname, 'src/utils/effects.ts'),
-      name: 'MyLib',
+      entry: resolve(__dirname, 'src/lib.ts'),
+      name: 'SimplePageFlip',
       // the proper extensions will be added
       fileName: 'simple-page-flip',
     },
