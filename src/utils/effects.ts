@@ -27,8 +27,6 @@ export interface EffectStyle {
 }
 
 const formatStyle = (
-  width: number,
-  height: number,
   matrixFlip: glMatrix.mat3,
   polygonRemain: Pos[],
   boxShadowWidth: number,
@@ -37,15 +35,15 @@ const formatStyle = (
   matrixEffect: glMatrix.mat3,
   polygonEffect: Pos[],
 ): EffectStyle => {
-  const transformFlip = toCSSMatrix(width, height, matrixFlip);
-  const clipPathRemain = toClipPath(width, height, polygonRemain);
+  const transformFlip = toCSSMatrix(matrixFlip);
+  const clipPathRemain = toClipPath(polygonRemain);
   const boxShadow = `0px 0px calc(var(--scale-px, 1px) * ${toCSSNumber(
     boxShadowWidth
   )}) 0px rgba(0, 0, 0, 1)`;
-  const clipPathFlip = toClipPath(width, height, polygonFlip);
-  const clipPathFlipShadow = toClipPath(width, height, polygonFlipShadow);
-  const transformEffect = toCSSMatrix(width, height, matrixEffect);
-  const clipPathEffect = toClipPath(width, height, polygonEffect);
+  const clipPathFlip = toClipPath(polygonFlip);
+  const clipPathFlipShadow = toClipPath(polygonFlipShadow);
+  const transformEffect = toCSSMatrix(matrixEffect);
+  const clipPathEffect = toClipPath(polygonEffect);
   return {
     flipFront: {
       clipPath: clipPathRemain
@@ -171,8 +169,6 @@ export const getEffectLeftTop = (
     });
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
@@ -292,8 +288,6 @@ export const getEffectRightTop = (
 
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
@@ -415,8 +409,6 @@ export const getEffectLeft = (
 
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
@@ -539,8 +531,6 @@ export const getEffectRight = (
 
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
@@ -662,8 +652,6 @@ export const getEffectLeftBottom = (
 
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
@@ -787,8 +775,6 @@ export const getEffectRightBottom = (
 
 
   return formatStyle(
-    width,
-    height,
     matrixFlip,
     polygonRemain,
     boxShadowWidth,
