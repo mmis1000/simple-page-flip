@@ -5,7 +5,7 @@
       <div class="slider-fill"></div>
       <div :class="['extension', direction === 'right' ? 'extension-top' : 'extension-top-invert']"></div>
       <div :class="['extension', direction === 'right' ? 'extension-bottom' : 'extension-bottom-invert']"></div>
-      <div class="slider-indicator" ref="sliderIndicatorRef" :onPointerdown="onPointerDown"
+      <div v-if="!readonly" class="slider-indicator" ref="sliderIndicatorRef" :onPointerdown="onPointerDown"
         :onPointermove="onPointerMove" :onPointerup="onPointerUpOrCancel" :onPointercancel="onPointerUpOrCancel">
         <div class="slider-indicator-inner"></div>
       </div>
@@ -22,7 +22,8 @@ const props = defineProps({
   'maxValue': { type: Number, required: true },
   'modelValue': { type: Number, required: true },
   'extension': { type: Number, default: 20 },
-  'direction': { type: String as PropType<'left' | 'right'>, default: 'right' as const }
+  'direction': { type: String as PropType<'left' | 'right'>, default: 'right' as const },
+  'readonly': { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['update:modelValue'])
