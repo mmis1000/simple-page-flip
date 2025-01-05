@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "gl-matrix": "^3.4.3",
-    "lil-gui": "^0.19.2"
+    "lil-gui": "^0.19.2",
+    "vue": "^3.4.27"
   }
 }
