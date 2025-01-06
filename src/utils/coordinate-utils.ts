@@ -1,7 +1,7 @@
-import * as glMatrix from 'gl-matrix'
+import * as glMatrix from "gl-matrix";
 
-export type Pos = [number, number]
-export type Line = [Pos, Pos]
+export type Pos = [number, number];
+export type Line = [Pos, Pos];
 
 export function toCSSNumber(v: number) {
   if (Math.abs(v) < 1e-6) {
@@ -36,7 +36,14 @@ export function equalF32(a: number, b: number) {
   return Math.abs(bigger - lesser) < Math.abs(bigger) * epsilon;
 }
 
-export function genMatrix(s1: Pos, s2: Pos, s3: Pos, t1: Pos, t2: Pos, t3: Pos) {
+export function genMatrix(
+  s1: Pos,
+  s2: Pos,
+  s3: Pos,
+  t1: Pos,
+  t2: Pos,
+  t3: Pos
+) {
   const input = Float32Array.from([
     s1[0],
     s2[0],
@@ -46,7 +53,7 @@ export function genMatrix(s1: Pos, s2: Pos, s3: Pos, t1: Pos, t2: Pos, t3: Pos) 
     s3[1],
     1,
     1,
-    1
+    1,
   ]);
 
   const inverted = glMatrix.mat3.create();
@@ -61,7 +68,7 @@ export function genMatrix(s1: Pos, s2: Pos, s3: Pos, t1: Pos, t2: Pos, t3: Pos) 
     t3[1],
     1,
     1,
-    1
+    1,
   ]);
 
   const transformMatrix = glMatrix.mat3.create();
@@ -93,15 +100,16 @@ export function toCSSMatrix(transformMatrix: glMatrix.mat3) {
     transformMatrix[1],
     transformMatrix[4],
     transformMatrix[2],
-    transformMatrix[5]
+    transformMatrix[5],
   ];
 
   const deform = `matrix(${[...transposed2dMatrix.slice(0, 4)]
     .map(toCSSNumber)
-    .join(", ")},0,0)`
+    .join(", ")},0,0)`;
 
-
-  const move = `translate(calc(var(--scale-px, 1px) * ${toCSSNumber(transposed2dMatrix[4])}), calc(var(--scale-px, 1px) * ${toCSSNumber(transposed2dMatrix[5])}))`
+  const move = `translate(calc(var(--scale-px, 1px) * ${toCSSNumber(
+    transposed2dMatrix[4]
+  )}), calc(var(--scale-px, 1px) * ${toCSSNumber(transposed2dMatrix[5])}))`;
 
   const transform = `${move} ${deform}`;
 
@@ -117,7 +125,16 @@ export const line = (p1: Pos, p2: Pos): Line => {
 };
 
 // https://stackoverflow.com/questions/13937782/calculating-the-point-of-intersection-of-two-lines
-export function lineIntersect(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, x4: number, y4: number) {
+export function lineIntersect(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  x3: number,
+  y3: number,
+  x4: number,
+  y4: number
+) {
   var ua,
     ub,
     denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
@@ -130,15 +147,17 @@ export function lineIntersect(x1: number, y1: number, x2: number, y2: number, x3
     x1 + ua * (x2 - x1),
     y1 + ua * (y2 - y1),
     ua >= 0 && ua <= 1,
-    ub >= 0 && ub <= 1
+    ub >= 0 && ub <= 1,
   ] as [number, number, boolean, boolean];
 }
 
-export function intersection(line1: Line, line2: Line): {
-  pos: Pos
-  hitLine1: boolean
-  hitLine2: boolean
-
+export function intersection(
+  line1: Line,
+  line2: Line
+): {
+  pos: Pos;
+  hitLine1: boolean;
+  hitLine2: boolean;
 } | null {
   const res = lineIntersect(
     line1[0][0],
@@ -155,14 +174,18 @@ export function intersection(line1: Line, line2: Line): {
     return {
       pos: pos(res[0], res[1]),
       hitLine1: res[2],
-      hitLine2: res[3]
-    }
+      hitLine2: res[3],
+    };
   } else {
-    return null
+    return null;
   }
 }
 
-export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amount = 1): Pos[] {
+export function expandPolygon(
+  points: Pos[],
+  edgeToExpand = [] as number[],
+  amount = 1
+): Pos[] {
   if (amount === 0) {
     return points;
   }
@@ -182,11 +205,11 @@ export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amou
   const edge0 = edges[0];
   const edge0Vec = Float32Array.from([
     edge0[1][0] - edge0[0][0],
-    edge0[1][1] - edge0[0][1]
+    edge0[1][1] - edge0[0][1],
   ]);
   const edgeToCenterVec = Float32Array.from([
     center[0] - edge0[0][0],
-    center[1] - edge0[0][1]
+    center[1] - edge0[0][1],
   ]);
   // console.log(edge0Vec, edgeToCenterVec)
   const isClockWise =
@@ -203,7 +226,7 @@ export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amou
     } else {
       const normal = Float32Array.from([
         old[1][1] - old[0][1],
-        old[0][0] - old[1][0]
+        old[0][0] - old[1][0],
       ]);
       glMatrix.vec2.normalize(normal, normal);
       glMatrix.vec2.scale(normal, normal, isClockWise ? -amount : amount);
@@ -223,11 +246,37 @@ export function expandPolygon(points: Pos[], edgeToExpand = [] as number[], amou
   for (let i = 0; i < newEdges.length; i++) {
     const prev = newEdges[(i - 1 + newEdges.length) % newEdges.length];
     const old = newEdges[i];
-    const newPoint = intersection(prev, old);
-    if (newPoint) {
-      newPoints.push(newPoint.pos);
+    if (glMatrix.vec2.equals(prev[1], old[0])) {
+      newPoints.push(prev[1]);
     } else {
-      console.error('bad expand')
+      const newPoint = intersection(prev, old);
+      if (newPoint) {
+        newPoints.push(newPoint.pos);
+      } else {
+        if (glMatrix.vec2.equals(prev[0], prev[1])) {
+          // borrow the point
+          const prevNew = line(prev[0], old[0]);
+          const newPoint = intersection(prevNew, old);
+          if (newPoint) {
+            newPoints.push(newPoint.pos);
+          } else {
+            console.error("bad expand");
+            return points;
+          }
+        } else if (glMatrix.vec2.equals(old[0], old[1])) {
+          const oldNew = line(prev[1], old[1]);
+          const newPoint = intersection(prev, oldNew);
+          if (newPoint) {
+            newPoints.push(newPoint.pos);
+          } else {
+            console.error("bad expand");
+            return points;
+          }
+        } else {
+          console.error("bad expand");
+          return points;
+        }
+      }
     }
   }
   // console.log(newPoints)
@@ -245,7 +294,10 @@ export function applyTransform(point: Pos, transformMatrix: glMatrix.mat3) {
   return pos(transformOutput[0], transformOutput[1]);
 }
 
-export function applyReverseTransform(point: Pos, transformMatrix: glMatrix.mat3) {
+export function applyReverseTransform(
+  point: Pos,
+  transformMatrix: glMatrix.mat3
+) {
   const transformInput = glMatrix.vec3.fromValues(...point, 1);
   const transformOutput = glMatrix.vec3.create();
 
@@ -261,79 +313,90 @@ export function applyReverseTransform(point: Pos, transformMatrix: glMatrix.mat3
   return pos(transformOutput[0], transformOutput[1]);
 }
 
-export function insertLineToPolygon(polygon: Pos[], newLine: Line, index: number) {
+export function insertLineToPolygon(
+  polygon: Pos[],
+  newLine: Line,
+  index: number
+) {
   const wrap = (i: number) =>
     (((i + polygon.length) % polygon.length) + polygon.length) % polygon.length;
 
-  const replacePrev = []
-  let prevPoint = wrap(index - 1)
-  let newPointA: Pos | null = null
+  const replacePrev = [];
+  let prevPoint = wrap(index - 1);
+  let newPointA: Pos | null = null;
   while (true) {
     const lineBefore = line(
       polygon[wrap(prevPoint)],
       polygon[wrap(prevPoint + 1)]
-    )
+    );
     const newPointARes = intersection(lineBefore, newLine);
     if (!newPointARes || !newPointARes.hitLine1) {
       if (prevPoint === index) {
         // no intersection
-        break
+        break;
       }
       // mark as point to remove
-      replacePrev.unshift(wrap(prevPoint))
-      prevPoint = wrap(prevPoint - 1)
+      replacePrev.unshift(wrap(prevPoint));
+      prevPoint = wrap(prevPoint - 1);
     } else {
-      newPointA = newPointARes.pos
-      break
+      newPointA = newPointARes.pos;
+      break;
     }
   }
 
-  const replaceNext = []
-  let nextPoint = wrap(index + 1)
-  let newPointB: Pos | null = null
+  const replaceNext = [];
+  let nextPoint = wrap(index + 1);
+  let newPointB: Pos | null = null;
   while (true) {
     const lineAfter = line(
       polygon[wrap(nextPoint - 1)],
       polygon[wrap(nextPoint)]
-    )
+    );
     const newPointBRes = intersection(newLine, lineAfter);
     if (!newPointBRes || !newPointBRes.hitLine2) {
       if (nextPoint === index) {
         // no intersection
-        break
+        break;
       }
       // mark as point to remove
-      replaceNext.push(wrap(nextPoint))
-      nextPoint = wrap(nextPoint + 1)
+      replaceNext.push(wrap(nextPoint));
+      nextPoint = wrap(nextPoint + 1);
     } else {
-      newPointB = newPointBRes.pos
-      break
+      newPointB = newPointBRes.pos;
+      break;
     }
   }
-  
-  if (
-    newPointA == null ||
-    newPointB == null
-  ) {
+
+  if (newPointA == null || newPointB == null) {
     newPointA = polygon[wrap(index - 1)];
     newPointB = polygon[wrap(index + 1)];
     // just dupe the point instead
     // return polygon;
   }
-  
+
   const targetPoint = wrap(index);
   const result: Pos[] = [...polygon];
   for (const i of replacePrev) {
-    result[i] = pos(newPointA[0], newPointA[1])
+    result[i] = pos(newPointA[0], newPointA[1]);
   }
   for (const i of replaceNext) {
-    result[i] = pos(newPointB[0], newPointB[1])
+    result[i] = pos(newPointB[0], newPointB[1]);
   }
-  result.splice(targetPoint, 1, pos(newPointA[0], newPointA[1]), pos(newPointB[0], newPointB[1]));
+  result.splice(
+    targetPoint,
+    1,
+    pos(newPointA[0], newPointA[1]),
+    pos(newPointB[0], newPointB[1])
+  );
   return result;
 }
 export function toClipPath(poss: Pos[]) {
   return `polygon(${poss
-    .map((i) => `calc(var(--scale-px) * ${toCSSNumber(i[0])}) calc(var(--scale-px) * ${toCSSNumber(i[1])})`)
+    .map(
+      (i) =>
+        `calc(var(--scale-px) * ${toCSSNumber(
+          i[0]
+        )}) calc(var(--scale-px) * ${toCSSNumber(i[1])})`
+    )
     .join(", ")})`;
 }
