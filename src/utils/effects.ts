@@ -431,10 +431,10 @@ export const getEffectRight = (
   bottomOffset: number,
   maxShadowWidth: number
 ): EffectStyle => {
-  if (bottomOffset === 0) {
+  if (bottomOffset === width) {
     return getEffectRightTop(width, height, height, topOffset, maxShadowWidth)
   }
-  if (topOffset === 0) {
+  if (topOffset === width) {
     return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth)
   }
   const posTop = pos(topOffset, 0);
