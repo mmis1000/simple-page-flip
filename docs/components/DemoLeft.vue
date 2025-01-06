@@ -1,8 +1,8 @@
 <template>
-  <DemoBase :effect="effect" showLeft showTop />
+  <DemoBase :effect="effect" showTop showBottom />
 </template>
 <script setup lang="ts">
-import { getEffectLeftTop } from '../../src/lib';
+import { getEffectLeft } from '../../src/lib';
 import DemoBase from './DemoBase.vue';
 
 const effect = (
@@ -13,11 +13,11 @@ const effect = (
   top: number,
   right: number,
   bottom: number
-) => getEffectLeftTop(
+) => getEffectLeft(
   width,
   height,
-  left,
   top,
+  bottom,
   shadow
 );
 </script>
