@@ -4,7 +4,7 @@
     :style="{ '--page-width': `${width}px`, '--page-height': `${height}px` }"
   >
     <SliderH
-      :class="['slider-top', 'slider-top-most', onRight && 'horizontal-slider-on-right']"
+      :class="['slider-top', showTop && 'slider-top-most', onRight && 'horizontal-slider-on-right']"
       name="width"
       readonly
       :modelValue="width"
@@ -23,7 +23,7 @@
     />
     <SliderV
       v-if="!onRight"
-      class="slider-left slider-left-most"
+      :class="['slider-left', showLeft && 'slider-left-most']"
       name="height"
       readonly
       :modelValue="height"
@@ -49,7 +49,7 @@
     />
     <SliderV
       v-if="onRight"
-      class="slider-right slider-right-most"
+      :class="['slider-right', showRight && 'slider-right-most']"
       name="height"
       readonly
       :modelValue="height"
