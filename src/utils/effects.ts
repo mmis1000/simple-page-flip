@@ -304,6 +304,12 @@ export const getEffectLeft = (
   bottomOffset: number,
   maxShadowWidth: number
 ): EffectStyle => {
+  if (bottomOffset === 0) {
+    return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth)
+  }
+  if (topOffset === 0) {
+    return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth)
+  }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
   const matrixFlip = genReflectMatrix(posTop, posBottom);
@@ -425,6 +431,12 @@ export const getEffectRight = (
   bottomOffset: number,
   maxShadowWidth: number
 ): EffectStyle => {
+  if (bottomOffset === 0) {
+    return getEffectRightTop(width, height, height, topOffset, maxShadowWidth)
+  }
+  if (topOffset === 0) {
+    return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth)
+  }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
   const matrixFlip = genReflectMatrix(posTop, posBottom);
