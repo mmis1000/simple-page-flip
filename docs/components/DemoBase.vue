@@ -186,7 +186,7 @@ const effect = computed(() =>
 }
 
 .layer-flip-front .item {
-  font-size: calc(var(--scale-px, 1px) * 32);
+  font-size: calc(var(--scale-px, 1px) * 24);
   line-height: 1.5;
 }
 
