@@ -54,6 +54,14 @@ import Demo from "./Demo.vue";
 import { EffectStyle, getEffectLeftTop } from "../../src/lib";
 
 const props = defineProps({
+  width: {
+    type: Number,
+    default: 120,
+  },
+  height: {
+    type: Number,
+    default: 160,
+  },
   effect: {
     type: Function as PropType<
       (
@@ -90,8 +98,6 @@ const props = defineProps({
   },
 });
 
-const width = 150;
-const height = 200;
 const shadow = 10;
 const top = ref(60);
 const left = ref(75);
@@ -99,8 +105,8 @@ const bottom = ref(90);
 const right = ref(105);
 const effect = computed(() =>
   props.effect(
-    width,
-    height,
+    props.width,
+    props.height,
     shadow,
     left.value,
     top.value,
