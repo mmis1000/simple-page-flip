@@ -1,5 +1,5 @@
 <template>
-  <DemoBase :effect="effect" onRight showRight showTop />
+  <DemoBase :effect="effect" :onRight="true" showRight showTop />
 </template>
 <script setup lang="ts">
 import { getEffectRightTop } from '../../src/lib';

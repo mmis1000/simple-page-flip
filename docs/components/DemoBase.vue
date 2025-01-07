@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { computed, PropType, ref } from "vue";
 import Demo from "./Demo.vue";
-import { EffectStyle, getEffectLeftTop } from "../../src/lib";
+import { EffectStyle } from "../../src/lib";
 
 const props = defineProps({
   width: {
