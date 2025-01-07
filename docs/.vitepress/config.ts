@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Simple page flip",
   description: "A util library for generating page flip effect stylesheet",
+  base: process.env.BASE ?? '/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

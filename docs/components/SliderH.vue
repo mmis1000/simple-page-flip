@@ -172,6 +172,7 @@ const onPointerUpOrCancel = (ev: PointerEvent) => {
   left: calc(100% * var(--ratio));
   transform: translate(calc(-50% + 1px * var(--offset)), -50%);
   background-color: rgba(0, 0, 0, 0.2);
+  touch-action: none;
 }
 
 .slider-indicator-inner {

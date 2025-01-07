@@ -1,8 +1,10 @@
 <template>
+  <div class="wrap-out">
   <div
     class="wrap"
     :style="{ '--page-width': `${width}px`, '--page-height': `${height}px` }"
   >
+    <slot></slot>
     <SliderH
       :class="['slider-top', showTop && 'slider-top-most', onRight && 'horizontal-slider-on-right']"
       name="width"
@@ -66,8 +68,7 @@
       :extension="10"
       direction="left"
     />
-    <slot></slot>
-  </div>
+  </div></div>
 </template>
 <script setup lang="ts">
 import { PropType, ref } from "vue";
@@ -76,11 +77,11 @@ import SliderH from "./SliderH.vue";
 const props = defineProps({
   width: {
     type: Number,
-    default: 150,
+    default: 120,
   },
   height: {
     type: Number,
-    default: 200,
+    default: 160,
   },
   edges: {
     type: Array as PropType<("top" | "left" | "right" | "bottom")[]>,
@@ -118,9 +119,11 @@ const bottom = defineModel("bottom", { default: 60 });
   --bar-width: 20px;
   --bar-distance: 10px;
 
-  --page-height: 200px;
-  --page-width: 150px;
-  --padding: calc((var(--page-height) + var(--page-width)) / 4);
+  --page-height: 160px;
+  --page-width: 120px;
+
+  --padding: calc(var(--bar-width) * 2 + var(--bar-distance) * 2);
+
   width: calc(var(--page-width) * 2);
   height: var(--page-height);
   padding: var(--padding);
@@ -129,6 +132,18 @@ const bottom = defineModel("bottom", { default: 60 });
   /* background: repeating-linear-gradient(100deg, #faddab 0%, #faddab 1.5%, #e7b870 2%, #e7b870 2.5%, #faddab 3%); */
   background: white;
   position: relative;
+
+}
+
+@media (max-width: 420px) {
+  .wrap-out {
+    margin: 0 -24px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap {
+    flex-shrink: 0;
+  }
 }
 
 .slider-left {

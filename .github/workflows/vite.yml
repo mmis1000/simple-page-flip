@@ -41,6 +41,12 @@ jobs:
         run: npm run build
         env:
           BASE: "/simple-page-flip/"
+      - name: Build docs
+        run: npm run docs:build
+        env:
+          BASE: "/simple-page-flip/docs"
+      - name: Move docs
+        run: mv ./docs/.vitepress/dist ./dist/docs
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
