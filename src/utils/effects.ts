@@ -20,52 +20,82 @@ import * as glMatrix from "gl-matrix";
 const SHADOW_SIZE_TOLERANCE = 1.3;
 
 export interface EffectStyle {
-  flipFront: Partial<CSSStyleDeclaration>
-  flipBack: Partial<CSSStyleDeclaration>
-  flipShadow: Partial<CSSStyleDeclaration>
-  flipEffect: Partial<CSSStyleDeclaration>
+  flipFront: Partial<CSSStyleDeclaration>;
+  flipBack: Partial<CSSStyleDeclaration>;
+  flipShadow: Partial<CSSStyleDeclaration>;
+  flipEffect: Partial<CSSStyleDeclaration>;
 }
+
+const offsetMatrix = (matrix: glMatrix.mat3, x: number, y: number) => {
+  const res = glMatrix.mat3.create();
+  const matrixTranslate = glMatrix.mat3.fromTranslation(
+    glMatrix.mat3.create(),
+    glMatrix.vec2.fromValues(x, y)
+  );
+  glMatrix.mat3.transpose(matrixTranslate, matrixTranslate);
+  const matrixInverted = glMatrix.mat3.fromTranslation(
+    glMatrix.mat3.create(),
+    glMatrix.vec2.fromValues(-x, -y)
+  );
+  glMatrix.mat3.transpose(matrixInverted, matrixInverted);
+
+  glMatrix.mat3.mul(res, matrixTranslate, matrix);
+  glMatrix.mat3.mul(res, res, matrixInverted);
+  return res;
+};
 
 const formatStyle = (
   matrixFlip: glMatrix.mat3,
   polygonRemain: Pos[],
   boxShadowWidth: number,
   polygonFlip: Pos[],
+  matrixFlipShadow: glMatrix.mat3,
   polygonFlipShadow: Pos[],
   matrixEffect: glMatrix.mat3,
   polygonEffect: Pos[],
+  width: number,
+  height: number
 ): EffectStyle => {
-  const transformFlip = toCSSMatrix(matrixFlip);
+  const transformFlip = toCSSMatrix(
+    offsetMatrix(matrixFlip, width / 2, height / 2)
+  );
   const clipPathRemain = toClipPath(polygonRemain);
   const boxShadow = `0px 0px calc(var(--scale-px, 1px) * ${toCSSNumber(
     boxShadowWidth
   )}) 0px rgba(0, 0, 0, 1)`;
   const clipPathFlip = toClipPath(polygonFlip);
+  const transformFlipShadow = toCSSMatrix(
+    offsetMatrix(matrixFlipShadow, width / 2, height / 2)
+  );
   const clipPathFlipShadow = toClipPath(polygonFlipShadow);
-  const transformEffect = toCSSMatrix(matrixEffect);
+  const transformEffect = toCSSMatrix(
+    offsetMatrix(matrixEffect, width / 2, height / 2)
+  );
   const clipPathEffect = toClipPath(polygonEffect);
   return {
     flipFront: {
-      clipPath: clipPathRemain
+      clipPath: clipPathRemain,
     },
     flipBack: {
       transform: transformFlip,
-      clipPath: clipPathFlip
+      clipPath: clipPathFlip,
     },
-    flipEffect: matrixEffect.includes(NaN) ? {
-      display: 'none'
-    } : {
-      display: '',
-      transform: transformEffect,
-      clipPath: clipPathEffect
-    },
+    flipEffect: matrixEffect.includes(NaN)
+      ? {
+          display: "none",
+        }
+      : {
+          display: "",
+          transform: transformEffect,
+          clipPath: clipPathEffect,
+        },
     flipShadow: {
       boxShadow: boxShadow,
-      transform: transformFlip,
-      clipPath: clipPathFlipShadow
-    }
+      transform: transformFlipShadow,
+      clipPath: clipPathFlipShadow,
+    },
   };
-}
+};
 
 export const getEffectLeftTop = (
   width: number,
@@ -92,7 +122,11 @@ export const getEffectLeftTop = (
 
   let polygonFlipShadow =
     leftOffset >= topOffset
-      ? expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
+      ? expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
       : expandPolygon(polygonFlip, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   polygonFlipShadow = insertLineToPolygon(
@@ -168,15 +202,26 @@ export const getEffectLeftTop = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
+
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 export const getEffectRightTop = (
   width: number,
@@ -205,10 +250,13 @@ export const getEffectRightTop = (
 
   const polygonFlip = [posTop, posRight, pos(width, 0)];
 
-
   let polygonFlipShadow =
     rightOffset >= width - topOffset
-      ? expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
+      ? expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
       : expandPolygon(polygonFlip, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   polygonFlipShadow = insertLineToPolygon(
@@ -249,7 +297,6 @@ export const getEffectRightTop = (
     );
   }
 
-
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
@@ -277,7 +324,6 @@ export const getEffectRightTop = (
     applyTransform(posAdd(posTop, posVector as Pos), matrixFlip)
   );
 
-
   const polygonEffect = polygonFlip
     .map((i) => {
       return applyTransform(i, matrixFlip);
@@ -286,16 +332,26 @@ export const getEffectRightTop = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
 
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 export const getEffectLeft = (
   width: number,
@@ -305,10 +361,10 @@ export const getEffectLeft = (
   maxShadowWidth: number
 ): EffectStyle => {
   if (bottomOffset === 0) {
-    return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth)
+    return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth);
   }
   if (topOffset === 0) {
-    return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth)
+    return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth);
   }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
@@ -316,27 +372,36 @@ export const getEffectLeft = (
 
   const polygonRemain = [posTop, pos(width, 0), pos(width, height), posBottom];
 
-
   const boxShadowWidth = Math.min(
     Math.max(topOffset, bottomOffset),
     Math.max(width - topOffset, width - bottomOffset),
     maxShadowWidth
   );
 
-
   const polygonFlip = [posTop, pos(0, 0), pos(0, height), posBottom];
 
   let polygonFlipShadow =
     topOffset > bottomOffset
-      ? expandPolygon(polygonFlip, [0, 1], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
-      : expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
+      ? expandPolygon(
+          polygonFlip,
+          [0, 1],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
+      : expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        );
 
   if (topOffset > bottomOffset) {
     polygonFlipShadow = insertLineToPolygon(
       polygonFlipShadow,
       line(
         polygonFlip[0],
-        applyReverseTransform(pos(polygonFlip[0][0] + 10, polygonFlip[0][1]), matrixFlip)
+        applyReverseTransform(
+          pos(polygonFlip[0][0] + 10, polygonFlip[0][1]),
+          matrixFlip
+        )
       ),
       0
     );
@@ -356,7 +421,10 @@ export const getEffectLeft = (
       polygonFlipShadow,
       line(
         polygonFlip[3],
-        applyReverseTransform(pos(polygonFlip[3][0] + 10, polygonFlip[3][1]), matrixFlip)
+        applyReverseTransform(
+          pos(polygonFlip[3][0] + 10, polygonFlip[3][1]),
+          matrixFlip
+        )
       ),
       3
     );
@@ -372,7 +440,6 @@ export const getEffectLeft = (
       1
     );
   }
-
 
   const posVector = glMatrix.vec2.fromValues(-1, 0);
 
@@ -404,7 +471,6 @@ export const getEffectLeft = (
     applyTransform(posAdd(posTop, posVector as Pos), matrixFlip)
   );
 
-
   const polygonEffect = polygonFlip
     .map((i) => {
       return applyTransform(i, matrixFlip);
@@ -413,16 +479,26 @@ export const getEffectLeft = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
 
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 export const getEffectRight = (
   width: number,
@@ -432,10 +508,10 @@ export const getEffectRight = (
   maxShadowWidth: number
 ): EffectStyle => {
   if (bottomOffset === width) {
-    return getEffectRightTop(width, height, height, topOffset, maxShadowWidth)
+    return getEffectRightTop(width, height, height, topOffset, maxShadowWidth);
   }
   if (topOffset === width) {
-    return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth)
+    return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth);
   }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
@@ -443,28 +519,36 @@ export const getEffectRight = (
 
   const polygonRemain = [posTop, pos(0, 0), pos(0, height), posBottom];
 
-
   const boxShadowWidth = Math.min(
     Math.max(width - topOffset, width - bottomOffset),
     Math.max(topOffset, bottomOffset),
     maxShadowWidth
   );
 
-
   const polygonFlip = [posTop, pos(width, 0), pos(width, height), posBottom];
-
 
   let polygonFlipShadow =
     width - topOffset > width - bottomOffset
-      ? expandPolygon(polygonFlip, [0, 1], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
-      : expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
+      ? expandPolygon(
+          polygonFlip,
+          [0, 1],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
+      : expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        );
 
   if (width - topOffset > width - bottomOffset) {
     polygonFlipShadow = insertLineToPolygon(
       polygonFlipShadow,
       line(
         polygonFlip[0],
-        applyReverseTransform(pos(polygonFlip[0][0] + 10, polygonFlip[0][1]), matrixFlip)
+        applyReverseTransform(
+          pos(polygonFlip[0][0] + 10, polygonFlip[0][1]),
+          matrixFlip
+        )
       ),
       0
     );
@@ -484,7 +568,10 @@ export const getEffectRight = (
       polygonFlipShadow,
       line(
         polygonFlip[3],
-        applyReverseTransform(pos(polygonFlip[3][0] + 10, polygonFlip[3][1]), matrixFlip)
+        applyReverseTransform(
+          pos(polygonFlip[3][0] + 10, polygonFlip[3][1]),
+          matrixFlip
+        )
       ),
       3
     );
@@ -500,7 +587,6 @@ export const getEffectRight = (
       1
     );
   }
-
 
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
@@ -532,7 +618,6 @@ export const getEffectRight = (
     applyTransform(posAdd(posTop, posVector as Pos), matrixFlip)
   );
 
-
   const polygonEffect = polygonFlip
     .map((i) => {
       return applyTransform(i, matrixFlip);
@@ -541,16 +626,26 @@ export const getEffectRight = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
 
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 export const getEffectLeftBottom = (
   width: number,
@@ -581,7 +676,11 @@ export const getEffectLeftBottom = (
 
   let polygonFlipShadow =
     height - leftOffset >= bottomOffset
-      ? expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
+      ? expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
       : expandPolygon(polygonFlip, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   polygonFlipShadow = insertLineToPolygon(
@@ -622,7 +721,6 @@ export const getEffectLeftBottom = (
     );
   }
 
-
   const posVector = glMatrix.vec2.fromValues(-1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
@@ -653,7 +751,6 @@ export const getEffectLeftBottom = (
     applyTransform(posAdd(posBottom, posVector as Pos), matrixFlip)
   );
 
-
   const polygonEffect = polygonFlip
     .map((i) => {
       return applyTransform(i, matrixFlip);
@@ -662,16 +759,26 @@ export const getEffectLeftBottom = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
 
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 export const getEffectRightBottom = (
   width: number,
@@ -692,7 +799,6 @@ export const getEffectRightBottom = (
     pos(0, height),
   ];
 
-
   const boxShadowWidth = Math.min(
     height - rightOffset,
     width - bottomOffset,
@@ -701,10 +807,13 @@ export const getEffectRightBottom = (
 
   const polygonFlip = [posBottom, posRight, pos(width, height)];
 
-
   let polygonFlipShadow =
     height - rightOffset >= width - bottomOffset
-      ? expandPolygon(polygonFlip, [1, 2], boxShadowWidth * SHADOW_SIZE_TOLERANCE)
+      ? expandPolygon(
+          polygonFlip,
+          [1, 2],
+          boxShadowWidth * SHADOW_SIZE_TOLERANCE
+        )
       : expandPolygon(polygonFlip, [2], boxShadowWidth * SHADOW_SIZE_TOLERANCE);
 
   polygonFlipShadow = insertLineToPolygon(
@@ -745,7 +854,6 @@ export const getEffectRightBottom = (
     );
   }
 
-
   const posVector = glMatrix.vec2.fromValues(1, 0);
 
   glMatrix.vec2.normalize(posVector, posVector);
@@ -776,7 +884,6 @@ export const getEffectRightBottom = (
     applyTransform(posAdd(posBottom, posVector as Pos), matrixFlip)
   );
 
-
   const polygonEffect = polygonFlip
     .map((i) => {
       return applyTransform(i, matrixFlip);
@@ -785,16 +892,26 @@ export const getEffectRightBottom = (
       return applyReverseTransform(i, matrixEffect);
     });
 
+  const mirror = genReflectMatrix([width / 2, 0], [width / 2, height]);
+  const mirroredMatrixFlip = glMatrix.mat3.create();
+  glMatrix.mat3.mul(mirroredMatrixFlip, mirror, matrixFlip);
+
+  const mirroredPolygonFlip = polygonFlip.map((p) => {
+    return applyTransform(p, mirror);
+  });
 
   return formatStyle(
-    matrixFlip,
+    mirroredMatrixFlip,
     polygonRemain,
     boxShadowWidth,
-    polygonFlip,
+    mirroredPolygonFlip,
+    matrixFlip,
     polygonFlipShadow,
     matrixEffect,
     polygonEffect,
-  )
+    width,
+    height
+  );
 };
 
 /**
@@ -927,16 +1044,12 @@ export const createEffectLeft = (
     );
   } else {
     console.warn("invalid style result");
-    
+
     return {
-      flipFront: {
-      },
-      flipBack: {
-      },
-      flipEffect: {
-      },
-      flipShadow: {
-      }
+      flipFront: {},
+      flipBack: {},
+      flipEffect: {},
+      flipShadow: {},
     } satisfies EffectStyle;
   }
 };
@@ -1067,21 +1180,21 @@ export const createEffectRight = (
     console.warn("invalid style result");
     return {
       flipFront: {
-        clipPath: 'none'
+        clipPath: "none",
       },
       flipBack: {
-        transform: 'none',
-        clipPath: 'none'
+        transform: "none",
+        clipPath: "none",
       },
       flipEffect: {
-        transform: 'none',
-        clipPath: 'none'
+        transform: "none",
+        clipPath: "none",
       },
       flipShadow: {
-        boxShadow: 'none',
-        transform: 'none',
-        clipPath: 'none'
-      }
+        boxShadow: "none",
+        transform: "none",
+        clipPath: "none",
+      },
     } satisfies EffectStyle;
   }
 };

@@ -32,13 +32,6 @@ html {
   pointer-events: none;
 }
 
-.item-wrap {
-  height: calc(var(--scale-px, 1px) * var(--HEIGHT));
-  width: calc(var(--scale-px, 1px) * var(--WIDTH));
-  pointer-events: all;
-  transform-origin: 0 0;
-}
-
 .item {
   height: calc(var(--scale-px, 1px) * var(--HEIGHT));
   width: calc(var(--scale-px, 1px) * var(--WIDTH));
@@ -46,6 +39,7 @@ html {
   color: white;
   box-sizing: border-box;
   padding: calc(100% / var(--HEIGHT) * 32);
+  pointer-events: all;
 }
 
 .layer-flip-back .item,
@@ -59,11 +53,6 @@ html {
 .sample-book6 .item-layer{
   left: calc(var(--scale-px, 1px) * var(--WIDTH));
 }
-
-.layer-flip-back .item {
-  transform: scaleX(-1)
-}
-
 
 .layer-shadow .item {
   background: transparent !important;

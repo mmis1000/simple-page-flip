@@ -26,34 +26,26 @@ const template = (className: string) => `
 <div class="desk">
   <div class="wrap ${className}">
     <div class="item-layer layer-under">
-      <div class="item-wrap">
-        <div class="item">
-          <div class="text-placeholder"></div>
-        </div>
+      <div class="item">
+        <div class="text-placeholder">Text Text Text</div>
       </div>
     </div>
     <div class="item-layer layer-flip-front">
-      <div class="item-wrap">
-        <div class="item">
-          The<br>
-          &nbsp&nbspBook Title
-        </div>
+      <div class="item">
+        The<br>
+        &nbsp&nbspBook Title
       </div>
     </div>
     <div class="item-layer layer-shadow">
-      <div class="item-wrap">
-        <div class="item"></div>
-      </div>
+      <div class="item"></div>
     </div>
     <div class="item-layer layer-flip-back">
-      <div class="item-wrap">
-        <div class="item"><div class="text-placeholder"></div></div>
+      <div class="item">
+        <div class="text-placeholder">Text Text Text</div>
       </div>
     </div>
     <div class="item-layer layer-effect">
-      <div class="item-wrap">
-        <div class="item"></div>
-      </div>
+      <div class="item"></div>
     </div>
   </div>
 </div>
@@ -98,28 +90,28 @@ type EffectStep = [
 const applyStyle = (rootSelector: string, style: EffectStyle) => {
   document
     .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-flip-front .item-wrap"
+      rootSelector + " .layer-flip-front .item"
     )
     .forEach((i) => {
       Object.assign(i.style, style.flipFront);
     });
   document
     .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-flip-back .item-wrap"
+      rootSelector + " .layer-flip-back .item"
     )
     .forEach((i) => {
       Object.assign(i.style, style.flipBack);
     });
   document
     .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-shadow .item-wrap"
+      rootSelector + " .layer-shadow .item"
     )
     .forEach((i) => {
       Object.assign(i.style, style.flipShadow);
     });
   document
     .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-effect .item-wrap"
+      rootSelector + " .layer-effect .item"
     )
     .forEach((i) => {
       Object.assign(i.style, style.flipEffect);

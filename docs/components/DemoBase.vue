@@ -13,36 +13,26 @@
     <div :class="{ right: onRight }">
       <div class="wrap" :style="{ '--WIDTH': width, '--HEIGHT': height }">
         <div class="item-layer layer-under">
-          <div class="item-wrap">
-            <div class="item">
-              <div class="text-placeholder"></div>
-            </div>
+          <div class="item">
+            <div class="text-placeholder">Text Text</div>
           </div>
         </div>
         <div class="item-layer layer-flip-front">
-          <div class="item-wrap" :style="effect.flipFront as any">
-            <div class="item">
-              The<br />
-              &nbsp&nbspBook Title
-            </div>
+          <div class="item" :style="effect.flipFront as any">
+            The<br />
+            &nbsp&nbspBook Title
           </div>
         </div>
         <div class="item-layer layer-shadow">
-          <div class="item-wrap" :style="effect.flipShadow as any">
-            <div class="item"></div>
-          </div>
+          <div class="item" :style="effect.flipShadow as any"></div>
         </div>
         <div class="item-layer layer-flip-back">
-          <div class="item-wrap" :style="effect.flipBack as any">
-            <div class="item">
-              <div class="text-placeholder"></div>
-            </div>
+          <div class="item" :style="effect.flipBack as any">
+            <div class="text-placeholder">Text Text</div>
           </div>
         </div>
         <div class="item-layer layer-effect">
-          <div class="item-wrap" :style="effect.flipEffect as any">
-            <div class="item"></div>
-          </div>
+          <div class="item" :style="effect.flipEffect as any"></div>
         </div>
       </div>
     </div>
@@ -141,13 +131,6 @@ const effect = computed(() =>
   transform: translateX(100%);
 }
 
-.item-wrap {
-  height: calc(var(--scale-px, 1px) * var(--HEIGHT));
-  width: calc(var(--scale-px, 1px) * var(--WIDTH));
-  pointer-events: all;
-  transform-origin: 0 0;
-}
-
 .item {
   height: calc(var(--scale-px, 1px) * var(--HEIGHT));
   width: calc(var(--scale-px, 1px) * var(--WIDTH));
@@ -155,6 +138,7 @@ const effect = computed(() =>
   color: white;
   box-sizing: border-box;
   padding: calc(100% / var(--HEIGHT) * 32);
+  pointer-events: all;
 }
 
 .layer-flip-back .item,
@@ -164,17 +148,9 @@ const effect = computed(() =>
   border: 1px solid black;
 }
 
-.layer-flip-back .item {
-  transform: scaleX(-1);
-}
-
 .layer-shadow .item {
   background: transparent !important;
 }
-
-/* .layer-shadow {
-  filter: blur(2px);
-} */
 
 .layer-effect .item {
   background: linear-gradient(
