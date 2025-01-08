@@ -9,11 +9,11 @@ import DemoSetupWithStyle from './components/DemoSetupWithStyle.vue'
 
 - None
 
-any frameworks should work with this library because it is just a style generator
+Any frameworks should work with this library because it is just a style generator.
 
 ## Setup
 
-All APIs in this library returns `EffectStyle` which consist of 4 style objects
+All APIs in this library return `EffectStyle` which consists of 4 style objects.
 
 ```typescript
 export declare interface EffectStyle {
@@ -24,7 +24,7 @@ export declare interface EffectStyle {
 }
 ```
 
-To use these 4 style objects you need a stack of elements in this order
+To use these 4 style objects you need a stack of elements in this order.
 
 ```html
 <div class="root" style="width: 200px; height: 250px; background: white; position: relative">
@@ -43,24 +43,24 @@ To use these 4 style objects you need a stack of elements in this order
 </div>
 ```
 
-There will be 4 layers in this order
+There will be 4 layers in this order.
 
 1. front
-    - the page front that being folded, can have any content you want
+    - the page front that is being folded, can have any content you want
 2. shadow
     - a decoration layer with no default appearance
 3. back
-    - the page back that folded to font, can have any content you want
+    - the page back that is folded to font, can have any content you want
 4. effect
     - a decoration layer with no default appearance
 
-Each of them should have same height and width set and overlap on same position
+Each of them should have the same height and width set and overlap on the same position.
 
 <DemoSetupWithoutStyle/>
 
-And then you apply style in `EffectStyle` to each one with js,  
+And then you apply styles in `EffectStyle` to each one with js,  
 or pre-render using some frameworks,  
-or copy the generated style into normal css stylesheet
+or copy the generated style into normal css stylesheet.
 
 ```typescript
 const rootEl = document.querySelector('.root')!
@@ -82,4 +82,4 @@ rootEl.querySelectorAll<HTMLDivElement>(':scope .effect .item').forEach(el => {
 <DemoSetupWithStyle/>
 
 Congratulations!  
-The effect is now properly setup.
+The effect is now properly set up.
