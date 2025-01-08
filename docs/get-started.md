@@ -13,7 +13,7 @@ any frameworks should work with this library because it is just a style generato
 
 ## Setup
 
-All APIs in this library returns `EffectStyle` which consist of 4 style object
+All APIs in this library returns `EffectStyle` which consist of 4 style objects
 
 ```typescript
 export declare interface EffectStyle {
@@ -24,7 +24,7 @@ export declare interface EffectStyle {
 }
 ```
 
-To use these 4 style object you need a stack of elements in this order
+To use these 4 style objects you need a stack of elements in this order
 
 ```html
 <div class="root" style="width: 200px; height: 250px; background: white; position: relative">
