@@ -394,9 +394,9 @@ export function toClipPath(poss: Pos[]) {
   return `polygon(${poss
     .map(
       (i) =>
-        `calc(var(--scale-px) * ${toCSSNumber(
+        `calc(var(--scale-px, 1px) * ${toCSSNumber(
           i[0]
-        )}) calc(var(--scale-px) * ${toCSSNumber(i[1])})`
+        )}) calc(var(--scale-px, 1px) * ${toCSSNumber(i[1])})`
     )
     .join(", ")})`;
 }

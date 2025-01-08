@@ -1,4 +1,4 @@
-# Usages
+# API references
 
 <script setup>
 import DemoLeftTop from './components/DemoLeftTop.vue'
@@ -9,7 +9,20 @@ import DemoRightBottom from './components/DemoRightBottom.vue'
 import DemoRight from './components/DemoRight.vue'
 </script>
 
-## Basic setups
+## Interfaces
+
+### EffectStyle
+
+The return type of APIs in this library
+
+```typescript
+export declare interface EffectStyle {
+    flipFront: Partial<CSSStyleDeclaration>;
+    flipBack: Partial<CSSStyleDeclaration>;
+    flipShadow: Partial<CSSStyleDeclaration>;
+    flipEffect: Partial<CSSStyleDeclaration>;
+}
+```
 
 ## Raw Effects
 

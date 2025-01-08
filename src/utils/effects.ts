@@ -88,6 +88,7 @@ const formatStyle = (
           display: "",
           transform: transformEffect,
           clipPath: clipPathEffect,
+          background: 'linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.3) 30%, rgba(0, 0, 0, 0))'
         },
     flipShadow: {
       boxShadow: boxShadow,

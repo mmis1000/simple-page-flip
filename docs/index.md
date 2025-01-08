@@ -11,8 +11,11 @@ hero:
     #   text: Markdown Examples
     #   link: /markdown-examples
     - theme: alt
-      text: Usages
-      link: /usages
+      text: Get started
+      link: /get-started
+    - theme: alt
+      text: API references
+      link: /api-references
 
 features:
   - title: CSS Only

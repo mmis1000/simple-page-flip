@@ -113,7 +113,7 @@ const effect = computed(() =>
   aspect-ratio: calc(1 / var(--HEIGHT) * var(--WIDTH) * 2);
 
   container-type: size;
-  --scale-px: calc(100cqw / var(--WIDTH) * 0.5);
+  --scale-px: 1px;
 
   position: relative;
 }
@@ -146,19 +146,6 @@ const effect = computed(() =>
   background: #e7e7e7;
   color: #333;
   border: 1px solid black;
-}
-
-.layer-shadow .item {
-  background: transparent !important;
-}
-
-.layer-effect .item {
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.5),
-    rgba(255, 255, 255, 0.3) 30%,
-    rgba(0, 0, 0, 0)
-  );
 }
 
 .layer-flip-front .item {
