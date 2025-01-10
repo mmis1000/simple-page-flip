@@ -7,6 +7,7 @@ import DemoLeft from './components/DemoLeft.vue'
 import DemoRightTop from './components/DemoRightTop.vue'
 import DemoRightBottom from './components/DemoRightBottom.vue'
 import DemoRight from './components/DemoRight.vue'
+import DemoEffectStrength from './components/DemoEffectStrength.vue'
 </script>
 
 ## Interfaces
@@ -23,6 +24,23 @@ export declare interface EffectStyle {
     flipEffect: Partial<CSSStyleDeclaration>;
 }
 ```
+
+## The `shadow` parameter
+
+This parameter controls the max width of shadow effect and reflection.
+
+<DemoEffectStrength top="60" bottom="50" initial-shadow="10"/>
+
+<DemoEffectStrength top="60" bottom="50" initial-shadow="30"/>
+
+The actual shadow width is capped by the distance to the corner.  
+The book will have no effect applied when it is nearly completely opened or closed.  
+
+<DemoEffectStrength top="10" bottom="0" initial-shadow="10"/>
+
+It won't overflow the page dog-ear when specified value is much wider than the dog-ear itself.
+
+<DemoEffectStrength top="10" bottom="0" initial-shadow="50"/>
 
 ## Raw Effects
 

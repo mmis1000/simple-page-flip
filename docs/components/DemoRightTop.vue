@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import { getEffectRightTop } from '../../src/lib';
-import DemoBase from './DemoRaw.vue';
+import DemoBase from './DemoRawBase.vue';
 
 const effect = (
   width: number,

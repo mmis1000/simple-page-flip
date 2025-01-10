@@ -1,5 +1,5 @@
 <template>
-  <Demo
+  <DemoRawWrapper
     :onRight="onRight"
     :showTop="showTop"
     :showLeft="showLeft"
@@ -16,11 +16,11 @@
       :effect="effect"
       :onRight="onRight"
     />
-  </Demo>
+  </DemoRawWrapper>
 </template>
 <script setup lang="ts">
 import { computed, PropType, ref } from "vue";
-import Demo from "./DemoRawWrapper.vue";
+import DemoRawWrapper from "./DemoRawWrapper.vue";
 import { EffectStyle } from "../../src/lib";
 import DemoBook from "./DemoBook.vue";
 

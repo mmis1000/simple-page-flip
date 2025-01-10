@@ -138,6 +138,7 @@ const bottom = defineModel("bottom", { default: 60 });
   /* background: repeating-linear-gradient(100deg, #faddab 0%, #faddab 1.5%, #e7b870 2%, #e7b870 2.5%, #faddab 3%); */
   background: white;
   position: relative;
+  margin: 16px 0;
 }
 
 @media (max-width: 420px) {

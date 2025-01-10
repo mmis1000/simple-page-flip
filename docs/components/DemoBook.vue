@@ -30,7 +30,7 @@
 import { PropType, StyleValue } from "vue";
 import { EffectStyle } from "../../src/lib";
 
-const props = defineProps({
+defineProps({
   width: {
     type: Number,
     required: true,
@@ -45,7 +45,7 @@ const props = defineProps({
   },
   onRight: {
     type: Boolean,
-    required: true,
+    default: false,
   },
 });
 
