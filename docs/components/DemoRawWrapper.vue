@@ -1,80 +1,86 @@
 <template>
   <div class="wrap-out">
-  <div
-    class="wrap"
-    :style="{ '--page-width': `${width}px`, '--page-height': `${height}px` }"
-  >
-    <slot></slot>
-    <SliderH
-      :class="['slider-top', showTop && 'slider-top-most', onRight && 'horizontal-slider-on-right']"
-      name="width"
-      readonly
-      :modelValue="width"
-      :max-value="width"
-      :extension="30"
-      direction="bottom"
-    />
-    <SliderH
-      v-if="showTop"
-      :class="['slider-top', onRight && 'horizontal-slider-on-right']"
-      name="top offset"
-      v-model="top"
-      :max-value="width"
-      :extension="10"
-      direction="bottom"
-    />
-    <SliderV
-      v-if="!onRight"
-      :class="['slider-left', showLeft && 'slider-left-most']"
-      name="height"
-      readonly
-      :modelValue="height"
-      :max-value="height"
-      :extension="30"
-    />
-    <SliderV
-      v-if="!onRight && showLeft"
-      class="slider-left"
-      name="left offset"
-      v-model="left"
-      :max-value="height"
-      :extension="10"
-    />
-    <SliderH
-      v-if="showBottom"
-      :class="['slider-bottom', onRight && 'horizontal-slider-on-right']"
-      name="bottom offset"
-      v-model="bottom"
-      :max-value="width"
-      :extension="10"
-      direction="top"
-    />
-    <SliderV
-      v-if="onRight"
-      :class="['slider-right', showRight && 'slider-right-most']"
-      name="height"
-      readonly
-      :modelValue="height"
-      :max-value="height"
-      :extension="30"
-      direction="left"
-    />
-    <SliderV
-      v-if="onRight && showRight"
-      class="slider-right"
-      name="right offset"
-      v-model="right"
-      :max-value="height"
-      :extension="10"
-      direction="left"
-    />
-  </div></div>
+    <div
+      class="wrap"
+      :style="{ '--page-width': `${width}px`, '--page-height': `${height}px` }"
+    >
+      <slot></slot>
+      <SliderH
+        :class="[
+          'slider-top',
+          showTop && 'slider-top-most',
+          onRight && 'horizontal-slider-on-right',
+        ]"
+        name="width"
+        readonly
+        :modelValue="width"
+        :max-value="width"
+        :extension="30"
+        direction="bottom"
+      />
+      <SliderH
+        v-if="showTop"
+        :class="['slider-top', onRight && 'horizontal-slider-on-right']"
+        name="top offset"
+        v-model="top"
+        :max-value="width"
+        :extension="10"
+        direction="bottom"
+      />
+      <SliderV
+        v-if="!onRight"
+        :class="['slider-left', showLeft && 'slider-left-most']"
+        name="height"
+        readonly
+        :modelValue="height"
+        :max-value="height"
+        :extension="30"
+      />
+      <SliderV
+        v-if="!onRight && showLeft"
+        class="slider-left"
+        name="left offset"
+        v-model="left"
+        :max-value="height"
+        :extension="10"
+      />
+      <SliderH
+        v-if="showBottom"
+        :class="['slider-bottom', onRight && 'horizontal-slider-on-right']"
+        name="bottom offset"
+        v-model="bottom"
+        :max-value="width"
+        :extension="10"
+        direction="top"
+      />
+      <SliderV
+        v-if="onRight"
+        :class="['slider-right', showRight && 'slider-right-most']"
+        name="height"
+        readonly
+        :modelValue="height"
+        :max-value="height"
+        :extension="30"
+        direction="left"
+      />
+      <SliderV
+        v-if="onRight && showRight"
+        class="slider-right"
+        name="right offset"
+        v-model="right"
+        :max-value="height"
+        :extension="10"
+        direction="left"
+      />
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
-import { PropType, ref } from "vue";
+import { PropType } from "vue";
 import SliderV from "./SliderV.vue";
 import SliderH from "./SliderH.vue";
-const props = defineProps({
+
+defineProps({
   width: {
     type: Number,
     default: 120,
@@ -89,7 +95,7 @@ const props = defineProps({
   },
   onRight: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showTop: {
     type: Boolean,
@@ -106,7 +112,7 @@ const props = defineProps({
   showBottom: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const top = defineModel("top", { default: 60 });
@@ -132,7 +138,6 @@ const bottom = defineModel("bottom", { default: 60 });
   /* background: repeating-linear-gradient(100deg, #faddab 0%, #faddab 1.5%, #e7b870 2%, #e7b870 2.5%, #faddab 3%); */
   background: white;
   position: relative;
-
 }
 
 @media (max-width: 420px) {
@@ -141,6 +146,7 @@ const bottom = defineModel("bottom", { default: 60 });
     display: flex;
     justify-content: center;
   }
+
   .wrap {
     flex-shrink: 0;
   }
@@ -153,9 +159,11 @@ const bottom = defineModel("bottom", { default: 60 });
   width: var(--bar-width);
   height: var(--page-height);
 }
+
 .slider-left-most {
   left: calc(var(--padding) - var(--bar-distance) - var(--bar-width) * 2);
 }
+
 .slider-right {
   position: absolute;
   top: var(--padding);
@@ -163,8 +171,12 @@ const bottom = defineModel("bottom", { default: 60 });
   width: var(--bar-width);
   height: var(--page-height);
 }
+
 .slider-right-most {
-  left: calc(var(--padding) + var(--page-width) * 2 + var(--bar-distance) + var(--bar-width));
+  left: calc(
+    var(--padding) + var(--page-width) * 2 + var(--bar-distance) +
+      var(--bar-width)
+  );
 }
 
 .slider-top {
@@ -186,8 +198,8 @@ const bottom = defineModel("bottom", { default: 60 });
   width: var(--page-width);
   height: var(--bar-width);
 }
+
 .horizontal-slider-on-right {
   left: calc(var(--padding) + var(--page-width));
 }
-
 </style>

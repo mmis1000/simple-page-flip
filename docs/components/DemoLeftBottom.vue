@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import { getEffectLeftBottom } from '../../src/lib';
-import DemoBase from './DemoBase.vue';
+import DemoBase from './DemoRaw.vue';
 
 const effect = (
   width: number,
