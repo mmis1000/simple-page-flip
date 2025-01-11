@@ -993,7 +993,7 @@ export const createEffectLeft = (
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
-      return getEffectLeftTop(
+      return getEffectLeftBottom(
         width,
         height,
         resLeft.pos[1],
@@ -1001,7 +1001,7 @@ export const createEffectLeft = (
         maxShadowWidth
       );
     } else {
-      return getEffectLeftBottom(
+      return getEffectLeftTop(
         width,
         height,
         resLeft.pos[1],
@@ -1133,19 +1133,19 @@ export const createEffectRight = (
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
-      return getEffectRightBottom(
-        width,
-        height,
-        resRight.pos[1],
-        width,
-        maxShadowWidth
-      );
-    } else {
       return getEffectRightTop(
         width,
         height,
         resRight.pos[1],
+        0,
+        maxShadowWidth
+      );
+    } else {
+      return getEffectRightBottom(
         width,
+        height,
+        resRight.pos[1],
+        0,
         maxShadowWidth
       );
     }
