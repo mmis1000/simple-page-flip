@@ -47,15 +47,15 @@ const angleIndicatorRef = ref<HTMLDivElement>(null!);
 const showingAngle = computed(() => {
   if (trackingPointer.value) {
     const initialUserAngle = Math.atan2(
+      trackingPointer.value.startPos[1] - trackingPointer.value.centerPos[1],
       trackingPointer.value.startPos[0] - trackingPointer.value.centerPos[0],
-      trackingPointer.value.startPos[1] - trackingPointer.value.centerPos[1]
     );
     const endUserAngle = Math.atan2(
+      trackingPointer.value.endPos[1] - trackingPointer.value.centerPos[1],
       trackingPointer.value.endPos[0] - trackingPointer.value.centerPos[0],
-      trackingPointer.value.endPos[1] - trackingPointer.value.centerPos[1]
     );
     const diff = endUserAngle - initialUserAngle;
-    let newAngle = trackingPointer.value.startAngle - diff;
+    let newAngle = trackingPointer.value.startAngle + diff;
     if (newAngle < -Math.PI) newAngle += Math.PI * 2;
     if (newAngle > Math.PI) newAngle -= Math.PI * 2;
     newAngle = clamp(props.minAngle, newAngle, props.maxAngle);
@@ -106,16 +106,16 @@ const onPointerMove = (ev: PointerEvent) => {
   trackingPointer.value.endPos = [ev.clientX, ev.clientY] as const;
 
   const initialUserAngle = Math.atan2(
+    trackingPointer.value.startPos[1] - trackingPointer.value.centerPos[1],
     trackingPointer.value.startPos[0] - trackingPointer.value.centerPos[0],
-    trackingPointer.value.startPos[1] - trackingPointer.value.centerPos[1]
   );
   const endUserAngle = Math.atan2(
+    trackingPointer.value.endPos[1] - trackingPointer.value.centerPos[1],
     trackingPointer.value.endPos[0] - trackingPointer.value.centerPos[0],
-    trackingPointer.value.endPos[1] - trackingPointer.value.centerPos[1]
   );
   console.log(trackingPointer.value.startAngle, initialUserAngle, endUserAngle)
   const diff = endUserAngle - initialUserAngle;
-  let newAngle = trackingPointer.value.startAngle - diff;
+  let newAngle = trackingPointer.value.startAngle + diff;
   if (newAngle < -Math.PI) newAngle += Math.PI * 2;
   if (newAngle > Math.PI) newAngle -= Math.PI * 2;
   newAngle = clamp(props.minAngle, newAngle, props.maxAngle);
