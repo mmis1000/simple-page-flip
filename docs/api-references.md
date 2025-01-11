@@ -8,6 +8,7 @@ import DemoRightTop from './components/DemoRightTop.vue'
 import DemoRightBottom from './components/DemoRightBottom.vue'
 import DemoRight from './components/DemoRight.vue'
 import DemoEffectStrength from './components/DemoEffectStrength.vue'
+import DemoEffectFull from './components/DemoEffectFull.vue'
 </script>
 
 ## Interfaces
@@ -29,18 +30,18 @@ export declare interface EffectStyle {
 
 This parameter controls the max width of shadow effect and reflection.
 
-<DemoEffectStrength top="60" bottom="50" initial-shadow="10"/>
+<DemoEffectStrength :top="60" :bottom="50" :initial-shadow="10"/>
 
-<DemoEffectStrength top="60" bottom="50" initial-shadow="30"/>
+<DemoEffectStrength :top="60" :bottom="50" :initial-shadow="30"/>
 
 The actual shadow width is capped by the distance to the corner.  
 The book will have no effect applied when it is nearly completely opened or closed.  
 
-<DemoEffectStrength top="10" bottom="0" initial-shadow="10"/>
+<DemoEffectStrength :top="10" :bottom="0" :initial-shadow="10"/>
 
 It won't overflow the page dog-ear when specified value is much wider than the dog-ear itself.
 
-<DemoEffectStrength top="10" bottom="0" initial-shadow="50"/>
+<DemoEffectStrength :top="10" :bottom="0" :initial-shadow="50"/>
 
 ## Raw Effects
 
@@ -138,6 +139,59 @@ export declare const getEffectRight: (
     height: number,
     topOffset: number,
     bottomOffset: number,
+    maxShadowWidth: number
+) => EffectStyle;
+```
+
+## Full effect
+
+### Left
+
+<DemoEffectFull />
+
+``` typescript
+/**
+ *
+ * @param width
+ * @param height
+ * @param centerX
+ * @param centerY
+ * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
+ *              positive for clockwise, negative for counter clockwise
+ * @param maxShadowWidth
+ */
+export declare const createEffectLeft: (
+    width: number,
+    height: number,
+    centerX: number,
+    centerY: number,
+    angle: number,
+    maxShadowWidth: number
+) => EffectStyle;
+```
+
+## Right
+
+<DemoEffectFull :onRight="true"/>
+
+```typescript
+
+/**
+ *
+ * @param width
+ * @param height
+ * @param centerX
+ * @param centerY
+ * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
+ *              positive for clockwise, negative for counter clockwise
+ * @param maxShadowWidth
+ */
+export declare const createEffectRight: (
+    width: number,
+    height: number,
+    centerX: number,
+    centerY: number,
+    angle: number,
     maxShadowWidth: number
 ) => EffectStyle;
 ```

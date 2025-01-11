@@ -45,20 +45,6 @@ const props = defineProps({
     type: Number,
     default: 160,
   },
-  effect: {
-    type: Function as PropType<
-      (
-        width: number,
-        height: number,
-        shadow: number,
-        left: number,
-        top: number,
-        right: number,
-        bottom: number
-      ) => EffectStyle
-    >,
-    required: true,
-  },
   top: {
     type: Number,
     default: 60

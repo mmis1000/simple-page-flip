@@ -1,16 +1,49 @@
 <template>
   <div class="slider">
-    <div class="slider-inner" ref="sliderInnerRef"
-      :style="{ '--ratio': currentRatio, '--offset': offset, '--extension': extension }">
-      <div class="slider-fill"></div>
-      <div :class="['extension', direction === 'bottom' ? 'extension-left' : 'extension-left-invert']"></div>
-      <div :class="['extension', direction === 'bottom' ? 'extension-right' : 'extension-right-invert']"></div>
-      <div v-if="!readonly" class="slider-indicator" ref="sliderIndicatorRef" :onPointerdown="onPointerDown"
-        :onPointermove="onPointerMove" :onPointerup="onPointerUpOrCancel" :onPointercancel="onPointerUpOrCancel">
+    <div
+      class="slider-inner"
+      ref="sliderInnerRef"
+      :style="{
+        '--ratio': currentRatio,
+        '--offset': offset,
+        '--extension': extension,
+      }"
+    >
+      <div class="effect">
+        <div class="slider-fill"></div>
+        <div
+          :class="[
+            'extension',
+            direction === 'bottom' ? 'extension-left' : 'extension-left-invert',
+          ]"
+        ></div>
+        <div
+          :class="[
+            'extension',
+            direction === 'bottom'
+              ? 'extension-right'
+              : 'extension-right-invert',
+          ]"
+        ></div>
+      </div>
+      <div
+        v-if="!readonly"
+        class="slider-indicator"
+        ref="sliderIndicatorRef"
+        :onPointerdown="onPointerDown"
+        :onPointermove="onPointerMove"
+        :onPointerup="onPointerUpOrCancel"
+        :onPointercancel="onPointerUpOrCancel"
+      >
         <div class="slider-indicator-inner"></div>
       </div>
-      <div :class="['value-text', direction === 'top' ? 'value-text-top': 'value-text-bottom']">
-        {{ name ? `${name}: ` : '' }}
+      <div
+        :class="[
+          'value-text',
+          direction === 'top' ? 'value-text-top' : 'value-text-bottom',
+        ]"
+      >
+        {{ name ? `${name}: ` : "" }}
         {{ liveValue }}
       </div>
     </div>
@@ -19,72 +52,83 @@
 <script setup lang="ts">
 import { computed, PropType, ref, toRefs } from "vue";
 const props = defineProps({
-  'maxValue': { type: Number, required: true },
-  'modelValue': { type: Number, required: true },
-  'extension': { type: Number, default: 20 },
-  'direction': { type: String as PropType<'top' | 'bottom'>, default: 'bottom' },
-  'readonly': { type: Boolean, default: false }
-})
-const emit = defineEmits(['update:modelValue'])
+  maxValue: { type: Number, required: true },
+  modelValue: { type: Number, required: true },
+  extension: { type: Number, default: 20 },
+  direction: { type: String as PropType<"top" | "bottom">, default: "bottom" },
+  readonly: { type: Boolean, default: false },
+});
+const emit = defineEmits(["update:modelValue"]);
 const ratio = computed({
   get(): number {
-    return props.modelValue / props.maxValue
+    return props.modelValue / props.maxValue;
   },
   set(v) {
-    emit('update:modelValue', v * props.maxValue)
-  }
+    emit("update:modelValue", v * props.maxValue);
+  },
 });
 const sliderInnerRef = ref<HTMLDivElement>(null!);
 const sliderIndicatorRef = ref<HTMLDivElement>(null!);
-const maxValue = toRefs(props).maxValue
-const extension = toRefs(props).extension
-const direction =  toRefs(props).direction
-const name = defineModel('name', { default: '' })
+const maxValue = toRefs(props).maxValue;
+const extension = toRefs(props).extension;
+const direction = toRefs(props).direction;
+const name = defineModel("name", { default: "" });
 
 const trackingPointer = ref<{
-  id: number,
-  startRatio: number,
-  startPos: number,
-  endPos: number,
-  minPos: number,
-  maxPos: number,
-  fullWidth: number
+  id: number;
+  startRatio: number;
+  startPos: number;
+  endPos: number;
+  minPos: number;
+  maxPos: number;
+  fullWidth: number;
 } | null>(null);
 
 const clamp = (min, value, max) => {
-  return Math.min(max, Math.max(min, value))
-}
+  return Math.min(max, Math.max(min, value));
+};
 
 const offset = computed(() => {
-  if (trackingPointer.value == null) return 0
-  const normalizedPos = clamp(trackingPointer.value.minPos, trackingPointer.value.endPos, trackingPointer.value.maxPos)
-  return normalizedPos - trackingPointer.value.startPos
-})
+  if (trackingPointer.value == null) return 0;
+  const normalizedPos = clamp(
+    trackingPointer.value.minPos,
+    trackingPointer.value.endPos,
+    trackingPointer.value.maxPos
+  );
+  return normalizedPos - trackingPointer.value.startPos;
+});
 const currentRatio = computed(() => {
-  if (trackingPointer.value == null) return ratio.value
-  return trackingPointer.value.startRatio
-})
+  if (trackingPointer.value == null) return ratio.value;
+  return trackingPointer.value.startRatio;
+});
 
 const liveValue = computed(() => {
-  if (trackingPointer.value == null) return Math.round(ratio.value * maxValue.value)
-  const normalizedPos = clamp(trackingPointer.value.minPos, trackingPointer.value.endPos, trackingPointer.value.maxPos)
-  const ratioDiff = (normalizedPos - trackingPointer.value.startPos) / trackingPointer.value.fullWidth
-  const newRatio = trackingPointer.value.startRatio + ratioDiff
-  return Math.round(newRatio * maxValue.value)
-})
+  if (trackingPointer.value == null)
+    return Math.round(ratio.value * maxValue.value);
+  const normalizedPos = clamp(
+    trackingPointer.value.minPos,
+    trackingPointer.value.endPos,
+    trackingPointer.value.maxPos
+  );
+  const ratioDiff =
+    (normalizedPos - trackingPointer.value.startPos) /
+    trackingPointer.value.fullWidth;
+  const newRatio = trackingPointer.value.startRatio + ratioDiff;
+  return Math.round(newRatio * maxValue.value);
+});
 
 const onPointerDown = (ev: PointerEvent) => {
-  console.log(ev)
-  if (trackingPointer.value != null) return
-  sliderIndicatorRef.value.setPointerCapture(ev.pointerId)
-  const fullWidth = sliderInnerRef.value.getBoundingClientRect().width
-  const startPos = ev.clientX
-  const endPos = ev.clientX
-  const startRatio = ratio.value
-  const maxPos = startPos + fullWidth * (1 - startRatio)
-  const minPos = startPos - fullWidth * startRatio
+  console.log(ev);
+  if (trackingPointer.value != null) return;
+  sliderIndicatorRef.value.setPointerCapture(ev.pointerId);
+  const fullWidth = sliderInnerRef.value.getBoundingClientRect().width;
+  const startPos = ev.clientX;
+  const endPos = ev.clientX;
+  const startRatio = ratio.value;
+  const maxPos = startPos + fullWidth * (1 - startRatio);
+  const minPos = startPos - fullWidth * startRatio;
 
-  const id = ev.pointerId
+  const id = ev.pointerId;
   trackingPointer.value = {
     id,
     startRatio: ratio.value,
@@ -92,33 +136,57 @@ const onPointerDown = (ev: PointerEvent) => {
     endPos,
     minPos,
     maxPos,
-    fullWidth
-  }
+    fullWidth,
+  };
 };
 const onPointerMove = (ev: PointerEvent) => {
-  console.log(ev)
-  if (trackingPointer.value == null || trackingPointer.value.id !== ev.pointerId) return
-  trackingPointer.value.endPos = ev.clientX
+  if (
+    trackingPointer.value == null ||
+    trackingPointer.value.id !== ev.pointerId
+  ) {
+    return;
+  }
+  console.log(ev);
+  trackingPointer.value.endPos = ev.clientX;
 
-  
-  const normalizedPos = clamp(trackingPointer.value.minPos, trackingPointer.value.endPos, trackingPointer.value.maxPos)
-  const ratioDiff = (normalizedPos - trackingPointer.value.startPos) / trackingPointer.value.fullWidth
-  const newRatio = trackingPointer.value.startRatio + ratioDiff
-  const newValue = Math.round(newRatio * maxValue.value)
-  emit('update:modelValue', newValue)
+  const normalizedPos = clamp(
+    trackingPointer.value.minPos,
+    trackingPointer.value.endPos,
+    trackingPointer.value.maxPos
+  );
+  const ratioDiff =
+    (normalizedPos - trackingPointer.value.startPos) /
+    trackingPointer.value.fullWidth;
+  const newRatio = trackingPointer.value.startRatio + ratioDiff;
+  const newValue = Math.round(newRatio * maxValue.value);
+  emit("update:modelValue", newValue);
 };
 const onPointerUpOrCancel = (ev: PointerEvent) => {
-  console.log(ev)
-  if (trackingPointer.value == null || trackingPointer.value.id !== ev.pointerId) return
-  const normalizedPos = clamp(trackingPointer.value.minPos, trackingPointer.value.endPos, trackingPointer.value.maxPos)
-  const diff = normalizedPos - trackingPointer.value.startPos
-  const ratioDiff = diff / trackingPointer.value.fullWidth * 1
-  const newPercentage = trackingPointer.value.startRatio + ratioDiff
-  sliderIndicatorRef.value.releasePointerCapture(ev.pointerId)
+  if (
+    trackingPointer.value == null ||
+    trackingPointer.value.id !== ev.pointerId
+  ) {
+    return;
+  }
+  console.log(ev);
+  const normalizedPos = clamp(
+    trackingPointer.value.minPos,
+    trackingPointer.value.endPos,
+    trackingPointer.value.maxPos
+  );
+  const diff = normalizedPos - trackingPointer.value.startPos;
+  const ratioDiff = (diff / trackingPointer.value.fullWidth) * 1;
+  const newPercentage = trackingPointer.value.startRatio + ratioDiff;
+  sliderIndicatorRef.value.releasePointerCapture(ev.pointerId);
 
-  console.log(normalizedPos, trackingPointer.value.startPos, trackingPointer.value.startRatio, newPercentage)
-  ratio.value = newPercentage
-  trackingPointer.value = null
+  console.log(
+    normalizedPos,
+    trackingPointer.value.startPos,
+    trackingPointer.value.startRatio,
+    newPercentage
+  );
+  ratio.value = newPercentage;
+  trackingPointer.value = null;
 };
 </script>
 <style lang="css" scoped>
@@ -126,6 +194,7 @@ const onPointerUpOrCancel = (ev: PointerEvent) => {
   display: flex;
   align-items: stretch;
   justify-content: stretch;
+  user-select: none;
 }
 
 .slider-inner {
@@ -137,7 +206,7 @@ const onPointerUpOrCancel = (ev: PointerEvent) => {
   --indicator-padding: 5px;
   --extension: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .slider-fill {
@@ -152,7 +221,8 @@ const onPointerUpOrCancel = (ev: PointerEvent) => {
   left: calc(100% * var(--ratio) / 2);
   pointer-events: none;
   color: black;
-  text-shadow: 0px 0px 1px white, 0px 0px 1px white, 0px 0px 1px white, 0px 0px 1px white ;
+  text-shadow: 0px 0px 1px white, 0px 0px 1px white, 0px 0px 1px white,
+    0px 0px 1px white;
   white-space: nowrap;
   font-size: 0.75rem;
 }
@@ -217,5 +287,12 @@ const onPointerUpOrCancel = (ev: PointerEvent) => {
   position: absolute;
   width: 1px;
   background-color: black;
+}
+.effect {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0px 0px 1px white) drop-shadow(0px 0px 1px white)
+    drop-shadow(0px 0px 1px white);
 }
 </style>
