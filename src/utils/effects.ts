@@ -88,7 +88,8 @@ const formatStyle = (
           display: "",
           transform: transformEffect,
           clipPath: clipPathEffect,
-          background: 'linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.3) 30%, rgba(0, 0, 0, 0))'
+          background:
+            "linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.3) 30%, rgba(0, 0, 0, 0))",
         },
     flipShadow: {
       boxShadow: boxShadow,
@@ -932,7 +933,7 @@ export const createEffectLeft = (
   centerY: number,
   angle: number,
   maxShadowWidth: number
-) => {
+): EffectStyle => {
   const angleLine = Math.PI / 2 + angle;
   const vector = pos(Math.cos(angleLine), Math.sin(angleLine));
   const lineStart = pos(centerX, centerY);
@@ -993,23 +994,60 @@ export const createEffectLeft = (
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
-      return getEffectLeftBottom(
-        width,
-        height,
-        resLeft.pos[1],
-        width,
-        maxShadowWidth
-      );
+      // in \ direction
+      const p2 = pos(width, height);
+      const newLine = line(lineStart, p2);
+      const newResTop = intersection(lineTop, newLine)!;
+      const newResLeft = intersection(lineLeft, newLine)!;
+      if (newResTop.hitLine1) {
+        // top down
+        return getEffectLeft(
+          width,
+          height,
+          newResTop.pos[0],
+          width,
+          maxShadowWidth
+        );
+      } else {
+        // bottom left
+        return getEffectLeftBottom(
+          width,
+          height,
+          newResLeft.pos[1],
+          width,
+          maxShadowWidth
+        );
+      }
     } else {
-      return getEffectLeftTop(
-        width,
-        height,
-        resLeft.pos[1],
-        width,
-        maxShadowWidth
-      );
+      // in / direction
+      const p2 = pos(width, 0);
+      const newLine = line(lineStart, p2);
+      const newResBottom = intersection(lineBottom, newLine)!;
+      const newResLeft = intersection(lineLeft, newLine)!;
+      if (newResBottom.hitLine1) {
+        // top down
+        return getEffectLeft(
+          width,
+          height,
+          width,
+          newResBottom.pos[0],
+          maxShadowWidth
+        );
+      } else {
+        // top left
+        return getEffectLeftTop(
+          width,
+          height,
+          newResLeft.pos[1],
+          width,
+          maxShadowWidth
+        );
+      }
     }
   } else if (resTop?.hitLine1 && resRight?.hitLine1) {
+    const p2 = pos(width, height);
+    const newLine = line(lineStart, p2);
+    const newResTop = intersection(lineTop, newLine)!;
     //       x
     // ┌──────x──────┐
     // │       x     │
@@ -1022,8 +1060,17 @@ export const createEffectLeft = (
     // │             │x
     // └─────────────┘ x
 
-    return getEffectLeft(width, height, resTop.pos[0], width, maxShadowWidth);
+    return getEffectLeft(
+      width,
+      height,
+      newResTop.pos[0],
+      width,
+      maxShadowWidth
+    );
   } else if (resBottom?.hitLine1 && resRight?.hitLine1) {
+    const p2 = pos(width, 0);
+    const newLine = line(lineStart, p2);
+    const newResBottom = intersection(lineBottom, newLine)!;
     //  ┌────────────┐
     //  │            │
     //  │            │
@@ -1040,7 +1087,7 @@ export const createEffectLeft = (
       width,
       height,
       width,
-      resBottom.pos[0],
+      newResBottom.pos[0],
       maxShadowWidth
     );
   } else {
@@ -1132,24 +1179,61 @@ export const createEffectRight = (
     //   └─────────────┘
 
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
-    if (resLeft.pos[1] < resRight.pos[1]) {
-      return getEffectRightTop(
-        width,
-        height,
-        resRight.pos[1],
-        0,
-        maxShadowWidth
-      );
+    if (resLeft.pos[1] > resRight.pos[1]) {
+      // in \ direction
+      const p2 = pos(0, height);
+      const newLine = line(lineStart, p2);
+      const newResTop = intersection(lineTop, newLine)!;
+      const newResRight = intersection(lineRight, newLine)!;
+      if (newResTop.hitLine1) {
+        // top down
+        return getEffectRight(
+          width,
+          height,
+          newResTop.pos[0],
+          0,
+          maxShadowWidth
+        );
+      } else {
+        // bottom right
+        return getEffectRightBottom(
+          width,
+          height,
+          newResRight.pos[1],
+          0,
+          maxShadowWidth
+        );
+      }
     } else {
-      return getEffectRightBottom(
-        width,
-        height,
-        resRight.pos[1],
-        0,
-        maxShadowWidth
-      );
+      // in / direction
+      const p2 = pos(0, 0);
+      const newLine = line(lineStart, p2);
+      const newResBottom = intersection(lineBottom, newLine)!;
+      const newResRight = intersection(lineRight, newLine)!;
+      if (newResBottom.hitLine1) {
+        // top down
+        return getEffectRight(
+          width,
+          height,
+          0,
+          newResBottom.pos[0],
+          maxShadowWidth
+        );
+      } else {
+        // top left
+        return getEffectRightTop(
+          width,
+          height,
+          newResRight.pos[1],
+          0,
+          maxShadowWidth
+        );
+      }
     }
   } else if (resTop?.hitLine1 && resLeft?.hitLine1) {
+    const p2 = pos(0, height);
+    const newLine = line(lineStart, p2);
+    const newResTop = intersection(lineTop, newLine)!;
     //       x
     // ┌────x────────┐
     // │   x         │
@@ -1162,8 +1246,11 @@ export const createEffectRight = (
     // │             │
     // └─────────────┘
 
-    return getEffectRight(width, height, resTop.pos[0], 0, maxShadowWidth);
+    return getEffectRight(width, height, newResTop.pos[0], 0, maxShadowWidth);
   } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {
+    const p2 = pos(0, 0);
+    const newLine = line(lineStart, p2);
+    const newResBottom = intersection(lineBottom, newLine)!;
     //  ┌────────────┐
     //  │            │
     //  │            │
@@ -1176,7 +1263,13 @@ export const createEffectRight = (
     //  └──x─────────┘
     //      x
 
-    return getEffectRight(width, height, 0, resBottom.pos[0], maxShadowWidth);
+    return getEffectRight(
+      width,
+      height,
+      0,
+      newResBottom.pos[0],
+      maxShadowWidth
+    );
   } else {
     console.warn("invalid style result");
     return {
