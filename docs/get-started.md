@@ -24,22 +24,26 @@ export declare interface EffectStyle {
 }
 ```
 
-To use these 4 style objects you need a stack of elements in this order.
+To use these 4 style objects, you need a stack of elements in this order.
 
 ```html
 <div class="root" style="width: 200px; height: 250px; background: white; position: relative">
-    <div class="layer-flip-front" style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px;">
-        <div class="item" style="width: 100px; height: 150px; background: green">Front Front Front</div>
-    </div>
-    <div class="layer-shadow" style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px;">
-        <div class="item" style="width: 100px; height: 150px"></div>
-    </div>
-    <div class="layer-flip-back" style="position: absolute; left: 50px; ; top: 50px; width: 100px; height: 150px;">
-        <div class="item" style="width: 100px; height: 150px; background: blue">Back Back Back</div>
-    </div>
-    <div class="layer-effect" style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px;">
-        <div class="item" style="width: 100px; height: 150px"></div>
-    </div>
+    <div
+        class="layer-flip-front"
+        style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px; background: green"
+    >Front Front Front</div>
+    <div
+        class="layer-shadow"
+        style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px"
+    ></div>
+    <div
+        class="layer-flip-back"
+        style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px; background: blue"
+    >Back Back Back</div>
+    <div
+        class="layer-effect"
+        style="position: absolute; left: 50px; top: 50px; width: 100px; height: 150px"
+    ></div>
 </div>
 ```
 
@@ -65,16 +69,16 @@ or copy the generated style into normal css stylesheet.
 ```typescript
 const rootEl = document.querySelector('.root')!
 const effect = getEffectLeftTop(100, 150, 100, 50, 10)
-rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-flip-front .item').forEach(el => {
+rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-flip-front').forEach(el => {
     Object.assign(el.style, effect.flipFront)
 })
-rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-shadow .item').forEach(el => {
+rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-shadow').forEach(el => {
     Object.assign(el.style, effect.flipShadow)
 })
-rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-flip-back .item').forEach(el => {
+rootEl.querySelectorAll<HTMLDivElement>(':scope .layer-flip-back').forEach(el => {
     Object.assign(el.style, effect.flipBack)
 })
-rootEl.querySelectorAll<HTMLDivElement>(':scope .effect .item').forEach(el => {
+rootEl.querySelectorAll<HTMLDivElement>(':scope .effect').forEach(el => {
     Object.assign(el.style, effect.flipEffect)
 })
 ```
