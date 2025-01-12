@@ -44,7 +44,7 @@
         ]"
       >
         {{ name ? `${name}: ` : "" }}
-        {{ liveValue }}
+        {{ liveValue }}{{ unit }}
       </div>
     </div>
   </div>
@@ -57,6 +57,7 @@ const props = defineProps({
   extension: { type: Number, default: 20 },
   direction: { type: String as PropType<"top" | "bottom">, default: "bottom" },
   readonly: { type: Boolean, default: false },
+  unit: {type: String, default: ''},
   maxFractionDigit: { type: Number, default: 0 },
 });
 const emit = defineEmits(["update:modelValue"]);

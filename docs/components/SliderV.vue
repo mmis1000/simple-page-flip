@@ -44,7 +44,7 @@
         ]"
       >
         {{ name ? `${name}: ` : "" }}
-        {{ liveValue }}
+        {{ liveValue }}{{ unit }}
       </div>
     </div>
   </div>
@@ -60,6 +60,7 @@ const props = defineProps({
     default: "right" as const,
   },
   readonly: { type: Boolean, default: false },
+  unit: {type: String, default: ''},
   maxFractionDigit: { type: Number, default: 0 },
 });
 

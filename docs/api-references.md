@@ -27,7 +27,7 @@ export declare interface EffectStyle {
 }
 ```
 
-## The `shadow` parameter
+## The `maxShadowWidth` parameter
 
 This parameter controls the max width of shadow effect and reflection.
 
@@ -49,6 +49,7 @@ It won't overflow the page dog-ear when specified value is much wider than the d
 The `unit` parameter represent base length unit of this library (defaults to `1px`), it can be used with js/css variable to resize the effect.
 
 <DemoEffectUnit/>
+<DemoEffectUnit :initial-scale="0.5" />
 
 it can also be combined with container query unit like `1cqw` to make the effect responsive
 
@@ -193,7 +194,7 @@ export declare const createEffectLeft: (
 ) => EffectStyle;
 ```
 
-## Right
+### Right
 
 Book page on right
 

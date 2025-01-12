@@ -12,7 +12,8 @@
       />
       <SliderH
         :class="['slider-top-most']"
-        name="scale"
+        name="unit"
+        unit="px"
         v-model="scale"
         :max-value="1"
         :extension="10"
@@ -37,9 +38,13 @@ const props = defineProps({
     type: Number,
     default: 160,
   },
+  initialScale: {
+    type: Number,
+    default: 1,
+  } 
 });
 
-const scale = ref(1);
+const scale = ref(props.initialScale);
 
 const effect = computed(() =>
   getEffectLeftBottom(
