@@ -9,6 +9,7 @@ import DemoRightBottom from './components/DemoRightBottom.vue'
 import DemoRight from './components/DemoRight.vue'
 import DemoEffectStrength from './components/DemoEffectStrength.vue'
 import DemoEffectFull from './components/DemoEffectFull.vue'
+import DemoEffectUnit from './components/DemoEffectUnit.vue'
 </script>
 
 ## Interfaces
@@ -43,6 +44,14 @@ It won't overflow the page dog-ear when specified value is much wider than the d
 
 <DemoEffectStrength :top="10" :bottom="0" :initial-shadow="50"/>
 
+## The `unit` parameter
+
+The `unit` parameter represent base length unit of this library (defaults to `1px`), it can be used with js/css variable to resize the effect.
+
+<DemoEffectUnit/>
+
+it can also be combined with container query unit like `1cqw` to make the effect responsive
+
 ## Raw Effects
 
 These are raw effects that fold from specific edge to other
@@ -59,7 +68,8 @@ export declare const getEffectLeftTop: (
     height: number,
     leftOffset: number,
     topOffset: number,
-    maxShadowWidth: number
+    maxShadowWidth: number,
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -76,6 +86,7 @@ export declare const getEffectLeftBottom: (
     leftOffset: number,
     bottomOffset: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -92,6 +103,7 @@ export declare const getEffectLeft: (
     topOffset: number,
     bottomOffset: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -108,6 +120,7 @@ export declare const getEffectRightTop: (
     rightOffset: number,
     topOffset: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -124,6 +137,7 @@ export declare const getEffectRightBottom: (
     rightOffset: number,
     bottomOffset: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -140,6 +154,7 @@ export declare const getEffectRight: (
     topOffset: number,
     bottomOffset: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -158,7 +173,6 @@ Book page on left
 
 ``` typescript
 /**
- *
  * @param width
  * @param height
  * @param centerX
@@ -166,6 +180,7 @@ Book page on left
  * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
  *              positive for clockwise, negative for counter clockwise
  * @param maxShadowWidth
+ * @param unit base unit of all length value, defaults to `1px`
  */
 export declare const createEffectLeft: (
     width: number,
@@ -174,6 +189,7 @@ export declare const createEffectLeft: (
     centerY: number,
     angle: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```
 
@@ -188,7 +204,6 @@ Book page on right
 ```typescript
 
 /**
- *
  * @param width
  * @param height
  * @param centerX
@@ -196,6 +211,7 @@ Book page on right
  * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
  *              positive for clockwise, negative for counter clockwise
  * @param maxShadowWidth
+ * @param unit base unit of all length value, defaults to `1px`
  */
 export declare const createEffectRight: (
     width: number,
@@ -204,5 +220,6 @@ export declare const createEffectRight: (
     centerY: number,
     angle: number,
     maxShadowWidth: number
+    unit?: string,
 ) => EffectStyle;
 ```

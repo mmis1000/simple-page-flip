@@ -57,6 +57,7 @@ const props = defineProps({
   extension: { type: Number, default: 20 },
   direction: { type: String as PropType<"top" | "bottom">, default: "bottom" },
   readonly: { type: Boolean, default: false },
+  maxFractionDigit: { type: Number, default: 0 },
 });
 const emit = defineEmits(["update:modelValue"]);
 const ratio = computed({
@@ -104,7 +105,10 @@ const currentRatio = computed(() => {
 
 const liveValue = computed(() => {
   if (trackingPointer.value == null)
-    return Math.round(ratio.value * maxValue.value);
+    return (ratio.value * maxValue.value)
+      .toFixed(props.maxFractionDigit)
+      .replace(/(\.\d+)0+$/, "$1")
+      .replace(/\.0+$/, "");
   const normalizedPos = clamp(
     trackingPointer.value.minPos,
     trackingPointer.value.endPos,
@@ -114,7 +118,10 @@ const liveValue = computed(() => {
     (normalizedPos - trackingPointer.value.startPos) /
     trackingPointer.value.fullWidth;
   const newRatio = trackingPointer.value.startRatio + ratioDiff;
-  return Math.round(newRatio * maxValue.value);
+  return (newRatio * maxValue.value)
+    .toFixed(props.maxFractionDigit)
+    .replace(/(\.\d+)0+$/, "$1")
+    .replace(/\.0+$/, "");
 });
 
 const onPointerDown = (ev: PointerEvent) => {
@@ -158,7 +165,7 @@ const onPointerMove = (ev: PointerEvent) => {
     (normalizedPos - trackingPointer.value.startPos) /
     trackingPointer.value.fullWidth;
   const newRatio = trackingPointer.value.startRatio + ratioDiff;
-  const newValue = Math.round(newRatio * maxValue.value);
+  const newValue = newRatio * maxValue.value;
   emit("update:modelValue", newValue);
 };
 const onPointerUpOrCancel = (ev: PointerEvent) => {

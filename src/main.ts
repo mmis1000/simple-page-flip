@@ -89,30 +89,22 @@ type EffectStep = [
 
 const applyStyle = (rootSelector: string, style: EffectStyle) => {
   document
-    .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-flip-front .item"
-    )
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-front .item")
     .forEach((i) => {
       Object.assign(i.style, style.flipFront);
     });
   document
-    .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-flip-back .item"
-    )
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-flip-back .item")
     .forEach((i) => {
       Object.assign(i.style, style.flipBack);
     });
   document
-    .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-shadow .item"
-    )
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-shadow .item")
     .forEach((i) => {
       Object.assign(i.style, style.flipShadow);
     });
   document
-    .querySelectorAll<HTMLDivElement>(
-      rootSelector + " .layer-effect .item"
-    )
+    .querySelectorAll<HTMLDivElement>(rootSelector + " .layer-effect .item")
     .forEach((i) => {
       Object.assign(i.style, style.flipEffect);
     });
@@ -152,7 +144,8 @@ const updateDemoBook = (progress: number) => {
           HEIGHT,
           HEIGHT * left,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -167,7 +160,8 @@ const updateDemoBook = (progress: number) => {
           HEIGHT,
           HEIGHT * left,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -183,7 +177,8 @@ const updateDemoBook = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -199,7 +194,8 @@ const updateDemoBook = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -224,7 +220,8 @@ const updateDemoBook2 = (progress: number) => {
           HEIGHT,
           HEIGHT * right,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -239,7 +236,8 @@ const updateDemoBook2 = (progress: number) => {
           HEIGHT,
           HEIGHT * right,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -255,7 +253,8 @@ const updateDemoBook2 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -271,7 +270,8 @@ const updateDemoBook2 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -296,7 +296,8 @@ const updateDemoBook3 = (progress: number) => {
           HEIGHT,
           HEIGHT * left,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -311,7 +312,8 @@ const updateDemoBook3 = (progress: number) => {
           HEIGHT,
           HEIGHT * left,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -327,7 +329,8 @@ const updateDemoBook3 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -343,7 +346,8 @@ const updateDemoBook3 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -368,7 +372,8 @@ const updateDemoBook4 = (progress: number) => {
           HEIGHT,
           HEIGHT * right,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -383,7 +388,8 @@ const updateDemoBook4 = (progress: number) => {
           HEIGHT,
           HEIGHT * right,
           WIDTH * top,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -399,7 +405,8 @@ const updateDemoBook4 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -415,7 +422,8 @@ const updateDemoBook4 = (progress: number) => {
           HEIGHT,
           WIDTH * top,
           WIDTH * bottom,
-          SHADOW
+          SHADOW,
+          "var(--scale-px)"
         );
       },
     ],
@@ -445,7 +453,8 @@ const updateDemoBook5 = (progress: number) => {
     currentCenter[0],
     currentCenter[1],
     currentAngle,
-    SHADOW
+    SHADOW,
+    "var(--scale-px)"
   );
   applyStyle(ROOT, effect);
 };
@@ -475,7 +484,8 @@ const updateDemoBook6 = (progress: number) => {
     currentCenter[0],
     currentCenter[1],
     currentAngle,
-    SHADOW
+    SHADOW,
+    "var(--scale-px)"
   );
   applyStyle(ROOT, effect);
 };

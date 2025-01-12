@@ -54,24 +54,28 @@ const formatStyle = (
   matrixEffect: glMatrix.mat3,
   polygonEffect: Pos[],
   width: number,
-  height: number
+  height: number,
+  unit: string
 ): EffectStyle => {
   const transformFlip = toCSSMatrix(
-    offsetMatrix(matrixFlip, width / 2, height / 2)
+    offsetMatrix(matrixFlip, width / 2, height / 2),
+    unit
   );
-  const clipPathRemain = toClipPath(polygonRemain);
-  const boxShadow = `0px 0px calc(var(--scale-px, 1px) * ${toCSSNumber(
+  const clipPathRemain = toClipPath(polygonRemain, unit);
+  const boxShadow = `0px 0px calc(${unit} * ${toCSSNumber(
     boxShadowWidth
   )}) 0px rgba(0, 0, 0, 1)`;
-  const clipPathFlip = toClipPath(polygonFlip);
+  const clipPathFlip = toClipPath(polygonFlip, unit);
   const transformFlipShadow = toCSSMatrix(
-    offsetMatrix(matrixFlipShadow, width / 2, height / 2)
+    offsetMatrix(matrixFlipShadow, width / 2, height / 2),
+    unit
   );
-  const clipPathFlipShadow = toClipPath(polygonFlipShadow);
+  const clipPathFlipShadow = toClipPath(polygonFlipShadow, unit);
   const transformEffect = toCSSMatrix(
-    offsetMatrix(matrixEffect, width / 2, height / 2)
+    offsetMatrix(matrixEffect, width / 2, height / 2),
+    unit
   );
-  const clipPathEffect = toClipPath(polygonEffect);
+  const clipPathEffect = toClipPath(polygonEffect, unit);
   return {
     flipFront: {
       clipPath: clipPathRemain,
@@ -104,7 +108,8 @@ export const getEffectLeftTop = (
   height: number,
   leftOffset: number,
   topOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posLeft = pos(0, leftOffset);
@@ -222,7 +227,8 @@ export const getEffectLeftTop = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 export const getEffectRightTop = (
@@ -230,7 +236,8 @@ export const getEffectRightTop = (
   height: number,
   rightOffset: number,
   topOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   const posTop = pos(topOffset, 0);
   const posRight = pos(width, rightOffset);
@@ -352,7 +359,8 @@ export const getEffectRightTop = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 export const getEffectLeft = (
@@ -360,7 +368,8 @@ export const getEffectLeft = (
   height: number,
   topOffset: number,
   bottomOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === 0) {
     return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth);
@@ -499,7 +508,8 @@ export const getEffectLeft = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 export const getEffectRight = (
@@ -507,7 +517,8 @@ export const getEffectRight = (
   height: number,
   topOffset: number,
   bottomOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === width) {
     return getEffectRightTop(width, height, height, topOffset, maxShadowWidth);
@@ -646,7 +657,8 @@ export const getEffectRight = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 export const getEffectLeftBottom = (
@@ -654,7 +666,8 @@ export const getEffectLeftBottom = (
   height: number,
   leftOffset: number,
   bottomOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   const posBottom = pos(bottomOffset, height);
   const posLeft = pos(0, leftOffset);
@@ -779,7 +792,8 @@ export const getEffectLeftBottom = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 export const getEffectRightBottom = (
@@ -787,7 +801,8 @@ export const getEffectRightBottom = (
   height: number,
   rightOffset: number,
   bottomOffset: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   const posBottom = pos(bottomOffset, height);
   const posRight = pos(width, rightOffset);
@@ -912,7 +927,8 @@ export const getEffectRightBottom = (
     matrixEffect,
     polygonEffect,
     width,
-    height
+    height,
+    unit
   );
 };
 
@@ -925,6 +941,7 @@ export const getEffectRightBottom = (
  * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
  *              positive for clockwise, negative for counter clockwise
  * @param maxShadowWidth
+ * @param unit base unit of all length value, defaults to `1px`
  */
 export const createEffectLeft = (
   width: number,
@@ -932,7 +949,8 @@ export const createEffectLeft = (
   centerX: number,
   centerY: number,
   angle: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ): EffectStyle => {
   const angleLine = Math.PI / 2 + angle;
   const vector = pos(Math.cos(angleLine), Math.sin(angleLine));
@@ -961,7 +979,8 @@ export const createEffectLeft = (
       height,
       resTop.pos[0],
       resBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
     // we clipped into from left to right incorrectly
@@ -992,7 +1011,8 @@ export const createEffectLeft = (
           height,
           newResTop.pos[0],
           width,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       } else {
         // bottom left
@@ -1001,7 +1021,8 @@ export const createEffectLeft = (
           height,
           newResLeft.pos[1],
           width,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       }
     } else {
@@ -1019,7 +1040,8 @@ export const createEffectLeft = (
           height,
           width,
           newResBottom.pos[0],
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       } else {
         // top left
@@ -1028,7 +1050,8 @@ export const createEffectLeft = (
           height,
           newResLeft.pos[1],
           width,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       }
     }
@@ -1038,7 +1061,8 @@ export const createEffectLeft = (
       height,
       resLeft.pos[1],
       resTop.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resLeft?.hitLine1 && resBottom?.hitLine1) {
     return getEffectLeftBottom(
@@ -1046,7 +1070,8 @@ export const createEffectLeft = (
       height,
       resLeft.pos[1],
       resBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resTop?.hitLine1 && resRight?.hitLine1) {
     const p2 = pos(width, height);
@@ -1069,7 +1094,8 @@ export const createEffectLeft = (
       height,
       newResTop.pos[0],
       width,
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resBottom?.hitLine1 && resRight?.hitLine1) {
     const p2 = pos(width, 0);
@@ -1092,7 +1118,8 @@ export const createEffectLeft = (
       height,
       width,
       newResBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else {
     console.warn("invalid style result");
@@ -1115,6 +1142,7 @@ export const createEffectLeft = (
  * @param angle tilting of the page flip, between `-Math.PI / 2` and `Math.PI / 2`.
  *              positive for clockwise, negative for counter clockwise
  * @param maxShadowWidth
+ * @param unit base unit of all length value, defaults to `1px`
  */
 export const createEffectRight = (
   width: number,
@@ -1122,7 +1150,8 @@ export const createEffectRight = (
   centerX: number,
   centerY: number,
   angle: number,
-  maxShadowWidth: number
+  maxShadowWidth: number,
+  unit = "1px"
 ) => {
   const angleLine = Math.PI / 2 + angle;
   const vector = pos(Math.cos(angleLine), Math.sin(angleLine));
@@ -1151,7 +1180,8 @@ export const createEffectRight = (
       height,
       resTop.pos[0],
       resBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resLeft?.hitLine1 && resRight?.hitLine1) {
     // we clipped into from left to right incorrectly
@@ -1182,7 +1212,8 @@ export const createEffectRight = (
           height,
           newResTop.pos[0],
           0,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       } else {
         // bottom right
@@ -1191,7 +1222,8 @@ export const createEffectRight = (
           height,
           newResRight.pos[1],
           0,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       }
     } else {
@@ -1209,7 +1241,8 @@ export const createEffectRight = (
           height,
           0,
           newResBottom.pos[0],
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       } else {
         // top left
@@ -1218,7 +1251,8 @@ export const createEffectRight = (
           height,
           newResRight.pos[1],
           0,
-          maxShadowWidth
+          maxShadowWidth,
+          unit
         );
       }
     }
@@ -1228,7 +1262,8 @@ export const createEffectRight = (
       height,
       resRight.pos[1],
       resTop.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resRight?.hitLine1 && resBottom?.hitLine1) {
     return getEffectRightBottom(
@@ -1236,7 +1271,8 @@ export const createEffectRight = (
       height,
       resRight.pos[1],
       resBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else if (resTop?.hitLine1 && resLeft?.hitLine1) {
     const p2 = pos(0, height);
@@ -1254,7 +1290,14 @@ export const createEffectRight = (
     // │             │
     // └─────────────┘
 
-    return getEffectRight(width, height, newResTop.pos[0], 0, maxShadowWidth);
+    return getEffectRight(
+      width,
+      height,
+      newResTop.pos[0],
+      0,
+      maxShadowWidth,
+      unit
+    );
   } else if (resBottom?.hitLine1 && resLeft?.hitLine1) {
     const p2 = pos(0, 0);
     const newLine = line(lineStart, p2);
@@ -1276,7 +1319,8 @@ export const createEffectRight = (
       height,
       0,
       newResBottom.pos[0],
-      maxShadowWidth
+      maxShadowWidth,
+      unit
     );
   } else {
     console.warn("invalid style result");

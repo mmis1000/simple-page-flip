@@ -93,7 +93,7 @@ export function genReflectMatrix(p1: Pos, p2: Pos) {
   return genMatrix(p1, p2, p3 as Pos, p1, p2, p3r as Pos);
 }
 
-export function toCSSMatrix(transformMatrix: glMatrix.mat3) {
+export function toCSSMatrix(transformMatrix: glMatrix.mat3, unit: string) {
   const transposed2dMatrix = [
     transformMatrix[0],
     transformMatrix[3],
@@ -107,17 +107,13 @@ export function toCSSMatrix(transformMatrix: glMatrix.mat3) {
     .map(toCSSNumber)
     .join(", ")},0,0)`;
 
-  const move = `translate(calc(var(--scale-px, 1px) * ${toCSSNumber(
+  const move = `translate(calc(${unit} * ${toCSSNumber(
     transposed2dMatrix[4]
-  )}), calc(var(--scale-px, 1px) * ${toCSSNumber(transposed2dMatrix[5])}))`;
+  )}), calc(${unit} * ${toCSSNumber(transposed2dMatrix[5])}))`;
 
   const transform = `${move} ${deform}`;
 
   return transform;
-}
-
-export function genReflectCSSMatrix(p1: Pos, p2: Pos) {
-  return toCSSMatrix(genReflectMatrix(p1, p2));
 }
 
 export const line = (p1: Pos, p2: Pos): Line => {
@@ -390,13 +386,13 @@ export function insertLineToPolygon(
   );
   return result;
 }
-export function toClipPath(poss: Pos[]) {
+export function toClipPath(poss: Pos[], unit: string) {
   return `polygon(${poss
     .map(
       (i) =>
-        `calc(var(--scale-px, 1px) * ${toCSSNumber(
+        `calc(${unit} * ${toCSSNumber(
           i[0]
-        )}) calc(var(--scale-px, 1px) * ${toCSSNumber(i[1])})`
+        )}) calc(${unit} * ${toCSSNumber(i[1])})`
     )
     .join(", ")})`;
 }

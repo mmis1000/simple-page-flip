@@ -1,6 +1,6 @@
 <template>
   <div :class="{ right: onRight }">
-    <div class="wrap" :style="{ '--WIDTH': width, '--HEIGHT': height }">
+    <div class="wrap" :style="{ '--WIDTH': width, '--HEIGHT': height, '--scale-px': unit }">
       <div class="item layer-under">
         <div class="text-placeholder">Text Text</div>
       </div>
@@ -46,6 +46,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  unit: {
+    type: String,
+    default: '1px'
+  }
 });
 
 const asStyleValue = (v: any): Partial<StyleValue> => v;
@@ -72,7 +76,7 @@ const asStyleValue = (v: any): Partial<StyleValue> => v;
   background: #4f4fbb;
   color: white;
   box-sizing: border-box;
-  padding: calc(100% / var(--WIDTH) / 2 * 24);
+  padding: calc(var(--scale-px, 1px) * 24);
   pointer-events: all;
 }
 
@@ -101,6 +105,7 @@ const asStyleValue = (v: any): Partial<StyleValue> => v;
 
 .text-placeholder {
   flex: 1 1 auto;
+  font-size: calc(var(--scale-px, 1px) * 12);
   background: repeating-linear-gradient(
     180deg,
     transparent,
