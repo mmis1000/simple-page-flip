@@ -81,8 +81,8 @@
           '--top': left,
         }"
         :base-angle="Math.PI"
-        :min-angle="-Math.PI / 2"
-        :max-angle="Math.PI / 2"
+        :min-angle="Math.PI / 180 * -89"
+        :max-angle="Math.PI / 180 * 89"
         v-model:angle="angle"
       />
     </div>
