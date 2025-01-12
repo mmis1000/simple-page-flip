@@ -955,27 +955,11 @@ export const createEffectLeft = (
   const resBottom = intersection(lineBottom, lineSplit);
   const resLeft = intersection(lineLeft, lineSplit);
 
-  if (resTop?.hitLine1 && resLeft?.hitLine1) {
-    return getEffectLeftTop(
-      width,
-      height,
-      resLeft.pos[1],
-      resTop.pos[0],
-      maxShadowWidth
-    );
-  } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
+  if (resTop?.hitLine1 && resBottom?.hitLine1) {
     return getEffectLeft(
       width,
       height,
       resTop.pos[0],
-      resBottom.pos[0],
-      maxShadowWidth
-    );
-  } else if (resLeft?.hitLine1 && resBottom?.hitLine1) {
-    return getEffectLeftBottom(
-      width,
-      height,
-      resLeft.pos[1],
       resBottom.pos[0],
       maxShadowWidth
     );
@@ -995,11 +979,13 @@ export const createEffectLeft = (
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] < resRight.pos[1]) {
       // in \ direction
-      const p2 = pos(width, height);
+      const p2 = glMatrix.vec2.equals(pos(width, height), lineStart)
+        ? pos(0, 0)
+        : pos(width, height);
       const newLine = line(lineStart, p2);
       const newResTop = intersection(lineTop, newLine)!;
       const newResLeft = intersection(lineLeft, newLine)!;
-      if (newResTop.hitLine1) {
+      if (newResTop?.hitLine1) {
         // top down
         return getEffectLeft(
           width,
@@ -1020,7 +1006,9 @@ export const createEffectLeft = (
       }
     } else {
       // in / direction
-      const p2 = pos(width, 0);
+      const p2 = glMatrix.vec2.equals(pos(width, 0), lineStart)
+        ? pos(0, height)
+        : pos(width, 0);
       const newLine = line(lineStart, p2);
       const newResBottom = intersection(lineBottom, newLine)!;
       const newResLeft = intersection(lineLeft, newLine)!;
@@ -1044,6 +1032,22 @@ export const createEffectLeft = (
         );
       }
     }
+  } else if (resLeft?.hitLine1 && resTop?.hitLine1) {
+    return getEffectLeftTop(
+      width,
+      height,
+      resLeft.pos[1],
+      resTop.pos[0],
+      maxShadowWidth
+    );
+  } else if (resLeft?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectLeftBottom(
+      width,
+      height,
+      resLeft.pos[1],
+      resBottom.pos[0],
+      maxShadowWidth
+    );
   } else if (resTop?.hitLine1 && resRight?.hitLine1) {
     const p2 = pos(width, height);
     const newLine = line(lineStart, p2);
@@ -1141,27 +1145,11 @@ export const createEffectRight = (
   const resBottom = intersection(lineBottom, lineSplit);
   const resLeft = intersection(lineLeft, lineSplit);
 
-  if (resTop?.hitLine1 && resRight?.hitLine1) {
-    return getEffectRightTop(
-      width,
-      height,
-      resRight.pos[1],
-      resTop.pos[0],
-      maxShadowWidth
-    );
-  } else if (resTop?.hitLine1 && resBottom?.hitLine1) {
+  if (resTop?.hitLine1 && resBottom?.hitLine1) {
     return getEffectRight(
       width,
       height,
       resTop.pos[0],
-      resBottom.pos[0],
-      maxShadowWidth
-    );
-  } else if (resRight?.hitLine1 && resBottom?.hitLine1) {
-    return getEffectRightBottom(
-      width,
-      height,
-      resRight.pos[1],
       resBottom.pos[0],
       maxShadowWidth
     );
@@ -1181,7 +1169,9 @@ export const createEffectRight = (
     // to decide how to fix it, we check which side is higher and move point in right edge to correspond position
     if (resLeft.pos[1] > resRight.pos[1]) {
       // in \ direction
-      const p2 = pos(0, height);
+      const p2 = glMatrix.vec2.equals(pos(0, height), lineStart)
+        ? pos(width, 0)
+        : pos(0, height);
       const newLine = line(lineStart, p2);
       const newResTop = intersection(lineTop, newLine)!;
       const newResRight = intersection(lineRight, newLine)!;
@@ -1206,7 +1196,9 @@ export const createEffectRight = (
       }
     } else {
       // in / direction
-      const p2 = pos(0, 0);
+      const p2 = glMatrix.vec2.equals(pos(0, 0), lineStart)
+        ? pos(width, height)
+        : pos(0, 0);
       const newLine = line(lineStart, p2);
       const newResBottom = intersection(lineBottom, newLine)!;
       const newResRight = intersection(lineRight, newLine)!;
@@ -1230,6 +1222,22 @@ export const createEffectRight = (
         );
       }
     }
+  } else if (resRight?.hitLine1 && resTop?.hitLine1) {
+    return getEffectRightTop(
+      width,
+      height,
+      resRight.pos[1],
+      resTop.pos[0],
+      maxShadowWidth
+    );
+  } else if (resRight?.hitLine1 && resBottom?.hitLine1) {
+    return getEffectRightBottom(
+      width,
+      height,
+      resRight.pos[1],
+      resBottom.pos[0],
+      maxShadowWidth
+    );
   } else if (resTop?.hitLine1 && resLeft?.hitLine1) {
     const p2 = pos(0, height);
     const newLine = line(lineStart, p2);
