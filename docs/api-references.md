@@ -45,11 +45,11 @@ It won't overflow the page dog-ear when specified value is much wider than the d
 
 ## Raw Effects
 
-These are raw effect that fold from specific edge to other
+These are raw effects that fold from specific edge to other
 
 ### Left Top
 
-connects from left edge to top edge
+Connects from left edge to top edge
 
 <DemoLeftTop />
 
@@ -65,7 +65,7 @@ export declare const getEffectLeftTop: (
 
 ### Left Bottom
 
-connects from left edge to bottom edge
+Connects from left edge to bottom edge
 
 <DemoLeftBottom />
 
@@ -81,7 +81,7 @@ export declare const getEffectLeftBottom: (
 
 ### Left
 
-connects from top edge to bottom edge (flip the whole left edge to right)
+Connects from top edge to bottom edge (flip the whole left edge to right)
 
 <DemoLeft />
 
@@ -97,7 +97,7 @@ export declare const getEffectLeft: (
 
 ### Right Top
 
-connects from right edge to top edge
+Connects from right edge to top edge
 
 <DemoRightTop />
 
@@ -113,7 +113,7 @@ export declare const getEffectRightTop: (
 
 ### Right Bottom
 
-connects from right edge to bottom edge
+Connects from right edge to bottom edge
 
 <DemoRightBottom />
 
@@ -129,7 +129,7 @@ export declare const getEffectRightBottom: (
 
 ### Right
 
-connects from top edge to bottom edge (flip the whole right edge to left)
+Connects from top edge to bottom edge (flip the whole right edge to left)
 
 <DemoRight />
 
@@ -145,9 +145,16 @@ export declare const getEffectRight: (
 
 ## Full effect
 
+High level api that auto select the proper effect with a center point and a tilting angle
+
 ### Left
 
+Book page on left
+
+\* The `angle` parameter will be capped to the max possible value.
+
 <DemoEffectFull />
+
 
 ``` typescript
 /**
@@ -171,6 +178,10 @@ export declare const createEffectLeft: (
 ```
 
 ## Right
+
+Book page on right
+
+\* The `angle` parameter will be capped to the max possible value.
 
 <DemoEffectFull :onRight="true"/>
 
