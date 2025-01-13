@@ -2,11 +2,13 @@
   "name": "@mmis1000/simple-page-flip",
   "version": "0.0.1",
   "type": "module",
+  "main": "./dist/simple-page-flip.js",
   "exports": {
     ".": {
       "types": "./dist/simple-page-flip.d.ts",
-      "default": "./dist/simple-page-flip.js",
-      "node": "./dist/simple-page-flip.umd.cjs"
+      "require": "./dist/simple-page-flip.umd.cjs",
+      "import": "./dist/simple-page-flip.js",
+      "default": "./dist/simple-page-flip.js"
     }
   },
   "repository": {
@@ -20,13 +22,14 @@
     "preview": "vite preview",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "prepack": "npm run build-lib"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
-    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-dts": "^4.5.0",
     "vitepress": "^1.2.0"
   },
   "dependencies": {

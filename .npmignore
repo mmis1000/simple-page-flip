@@ -37,5 +37,8 @@ tsconfig.node.json
 vite.config.ts
 vite.config.node.ts
 
+# docs
+docs
+
 # test arcieve
 *.tgz
