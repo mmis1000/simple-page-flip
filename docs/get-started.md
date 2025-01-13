@@ -9,7 +9,15 @@ import DemoSetupWithStyle from './components/DemoSetupWithStyle.vue'
 
 - None
 
-Any frameworks should work with this library because it is just a style generator.
+Any framework should work with this library because it is just a style generator.
+
+## Install
+
+To get this library run the following command (or other package manager you prefer)
+
+```
+npm i simple-page-flip
+```
 
 ## Setup
 
