@@ -40,5 +40,5 @@ vite.config.node.ts
 # docs
 docs
 
-# test arcieve
+# test archive
 *.tgz
