@@ -31,7 +31,9 @@ features:
 
 <style>
 /** overrides .VPNavBar:not(.home) .divider-line[data-v-cf6e7c5e] */
-.no-separator .divider-line {
+/** overrides @media (min-width: 960px) {
+  .VPNavBar:not(.has-sidebar):not(.home.top) .divider  */
+.no-separator .divider-line, .no-separator .divider {
   background: transparent !important;
 }
 </style>
