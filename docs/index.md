@@ -1,6 +1,9 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
-layout: home
+layout: page
+sidebar: false
+
+pageClass: no-separator
 
 hero:
   name: "Simple page flip"
@@ -26,3 +29,15 @@ features:
     details: No remaining effect on screen when flip is completed, make it suitable for e-reader effect or jump scares
 ---
 
+<style>
+/** overrides .VPNavBar:not(.home) .divider-line[data-v-cf6e7c5e] */
+.no-separator .divider-line.divider-line.divider-line {
+  background: transparent
+}
+</style>
+<script setup lang="ts">
+import CustomHome from './layout/CustomHome.vue'
+</script>
+
+<CustomHome>
+</CustomHome>

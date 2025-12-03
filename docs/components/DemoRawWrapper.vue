@@ -139,6 +139,8 @@ const bottom = defineModel("bottom", { default: 60 });
   background: white;
   position: relative;
   margin: 16px 0;
+
+  overflow: hidden;
 }
 
 @media (max-width: 420px) {
