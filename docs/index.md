@@ -31,8 +31,8 @@ features:
 
 <style>
 /** overrides .VPNavBar:not(.home) .divider-line[data-v-cf6e7c5e] */
-.no-separator .divider-line.divider-line.divider-line {
-  background: transparent
+.no-separator .divider-line {
+  background: transparent !important;
 }
 </style>
 <script setup lang="ts">
