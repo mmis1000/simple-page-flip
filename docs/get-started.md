@@ -25,10 +25,10 @@ All APIs in this library return `EffectStyle` which consists of 4 style objects.
 
 ```typescript
 export declare interface EffectStyle {
-    flipFront: Partial<CSSStyleDeclaration>;
-    flipBack: Partial<CSSStyleDeclaration>;
-    flipShadow: Partial<CSSStyleDeclaration>;
-    flipEffect: Partial<CSSStyleDeclaration>;
+    flipFront: CSSProperties;
+    flipBack: CSSProperties;
+    flipShadow: CSSProperties;
+    flipEffect: CSSProperties;
 }
 ```
 

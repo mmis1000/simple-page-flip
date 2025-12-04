@@ -21,11 +21,17 @@ import * as glMatrix from "gl-matrix";
 
 const SHADOW_SIZE_TOLERANCE = 1.3;
 
+// add css variable support to CSS.Properties
+// so vue can use it in template
+interface CSSProperties extends CSS.Properties {
+  [key: `--${string}`]: string;
+}
+
 export interface EffectStyle {
-  flipFront: CSS.Properties & { [key: `--${string}`]: string };
-  flipBack: CSS.Properties & { [key: `--${string}`]: string } ;
-  flipShadow: CSS.Properties & { [key: `--${string}`]: string } ;
-  flipEffect: CSS.Properties & { [key: `--${string}`]: string } ;
+  flipFront: CSSProperties;
+  flipBack: CSSProperties;
+  flipShadow: CSSProperties;
+  flipEffect: CSSProperties;
 }
 
 const offsetMatrix = (matrix: glMatrix.mat3, x: number, y: number) => {
