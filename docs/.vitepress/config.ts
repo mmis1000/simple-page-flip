@@ -10,7 +10,8 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Get started', link: '/get-started' },
-      { text: 'API references', link: '/api-references' }
+      { text: 'API references', link: '/api-references' },
+      { text: 'Demos', link: '/demos' },
     ],
 
     sidebar: [
@@ -26,8 +27,13 @@ export default defineConfig({
           { text: 'API', link: '/api-references' },
         ]
       },
+      {
+        text: 'Demos',
+        items: [
+          { text: 'Demos', link: '/demos' },
+        ]
+      },
     ],
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/mmis1000/simple-page-flip' }
     ]
