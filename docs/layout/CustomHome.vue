@@ -14,8 +14,7 @@ import BreakIn from "../components/BreakIn.vue";
               <div class="clip">Simple page flip</div>
             </Fold>
           </h1>
-          <p class="text">
-            <!--
+          <p class="text"><!--
         -->A util library for generating page flip effect stylesheet
           </p>
           <BreakIn>
