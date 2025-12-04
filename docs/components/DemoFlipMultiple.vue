@@ -3,18 +3,18 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { getEffectLeft } from "../../src/lib";
 
 const items = [
-  "hsl(0, 50%, 50%)",
+  "hsl(0, 50%, 60%)",
   "hsl(30, 50%, 50%)",
   "hsl(60, 50%, 50%)",
   "hsl(90, 50%, 50%)",
   "hsl(120, 50%, 50%)",
-  "hsl(150, 50%, 50%)",
+  "hsl(150, 50%, 60%)",
   "hsl(180, 50%, 50%)",
-  "hsl(210, 50%, 50%)",
-  "hsl(240, 50%, 50%)",
-  "hsl(270, 50%, 50%)",
-  "hsl(300, 50%, 50%)",
-  "hsl(330, 50%, 50%)",
+  "hsl(210, 50%, 60%)",
+  "hsl(240, 50%, 70%)",
+  "hsl(270, 50%, 70%)",
+  "hsl(300, 50%, 60%)",
+  "hsl(330, 50%, 60%)",
 ];
 
 const DURATION = 4000;
