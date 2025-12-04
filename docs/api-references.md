@@ -20,10 +20,10 @@ The return type of APIs in this library
 
 ```typescript
 export declare interface EffectStyle {
-    flipFront: Partial<CSSStyleDeclaration>;
-    flipBack: Partial<CSSStyleDeclaration>;
-    flipShadow: Partial<CSSStyleDeclaration>;
-    flipEffect: Partial<CSSStyleDeclaration>;
+    flipFront: CSSProperties;
+    flipBack: CSSProperties;
+    flipShadow: CSSProperties;
+    flipEffect: CSSProperties;
 }
 ```
 
