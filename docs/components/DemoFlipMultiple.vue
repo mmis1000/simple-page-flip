@@ -56,12 +56,17 @@ const effects = computed(() => {
     },
     ...itemList.map((item, index) => {
       const color = item;
+
+      let shadowMax = SHADOW_MAX;
+      if (index === itemList.length - 1) {
+        shadowMax = ((1 / items.length) - fixedProgress) / (1 / items.length) * SHADOW_MAX;
+      }
       const effect = getEffectLeft(
         100,
         150,
         TOP_MAX * (fixedProgress + index / items.length),
         BOTTOM_MAX * (fixedProgress + index / items.length),
-        SHADOW_MAX
+        shadowMax
       );
 
       return {
@@ -78,7 +83,7 @@ const effects = computed(() => {
         150,
         TOP_MAX * (1 + 0 / items.length),
         BOTTOM_MAX * (1 + 0 / items.length),
-        SHADOW_MAX
+        0
       ),
     },
   ];
