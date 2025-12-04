@@ -17,6 +17,10 @@ const items = [
   "hsl(330, 50%, 60%)",
 ];
 
+const mapProgress = (progress: number) => {
+  return -Math.cos(progress * Math.PI) / 2 + 0.5;
+}
+
 const DURATION = 4000;
 // 0 ~ 1
 const progress = ref(0);
@@ -64,8 +68,8 @@ const effects = computed(() => {
       const effect = getEffectLeft(
         100,
         150,
-        TOP_MAX * (fixedProgress + index / items.length),
-        BOTTOM_MAX * (fixedProgress + index / items.length),
+        TOP_MAX * mapProgress(fixedProgress + index / items.length),
+        BOTTOM_MAX * mapProgress(fixedProgress + index / items.length),
         shadowMax
       );
 
@@ -78,6 +82,17 @@ const effects = computed(() => {
     {
       key: itemList.length + '-end',
       color: itemList[0],
+      effect: getEffectLeft(
+        100,
+        150,
+        TOP_MAX * (1 + 0 / items.length),
+        BOTTOM_MAX * (1 + 0 / items.length),
+        0
+      ),
+    },
+    {
+      key: itemList.length + '-end2',
+      color: items[items.length - 1],
       effect: getEffectLeft(
         100,
         150,
