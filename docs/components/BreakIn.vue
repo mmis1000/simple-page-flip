@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
+import { computed, CSSProperties, onMounted, onUnmounted, ref, shallowRef, StyleValue } from "vue";
 import { getEffectLeft, getEffectRight } from "../../src/lib";
 
 const size = ref({
@@ -91,10 +91,10 @@ const contentStyle = computed(() => {
       }"
     >
       <div class="page back-most"></div>
-      <div class="page" :style="holeStyle.flipFront as any"></div>
-      <div class="page" :style="holeStyle.flipShadow as any"></div>
-      <div class="page" :style="holeStyle.flipBack as any"></div>
-      <div class="page" :style="holeStyle.flipEffect as any"></div>
+      <div class="page" :style="holeStyle.flipFront"></div>
+      <div class="page" :style="holeStyle.flipShadow"></div>
+      <div class="page" :style="holeStyle.flipBack"></div>
+      <div class="page" :style="holeStyle.flipEffect"></div>
     </div>
     <div class="content" :style="contentStyle">
       <slot></slot>

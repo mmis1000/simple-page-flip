@@ -6,21 +6,21 @@
       </div>
       <div
         class="item layer-flip-front"
-        :style="asStyleValue(effect.flipFront)"
+        :style="effect.flipFront"
       >
         The<br />
         &nbsp&nbspBook Title
       </div>
       <div
         class="item layer-shadow"
-        :style="asStyleValue(effect.flipShadow)"
+        :style="effect.flipShadow"
       ></div>
-      <div class="item layer-flip-back" :style="asStyleValue(effect.flipBack)">
+      <div class="item layer-flip-back" :style="effect.flipBack">
         <div class="text-placeholder">Text Text</div>
       </div>
       <div
         class="item layer-effect"
-        :style="asStyleValue(effect.flipEffect)"
+        :style="effect.flipEffect"
       ></div>
     </div>
   </div>
@@ -52,7 +52,6 @@ defineProps({
   }
 });
 
-const asStyleValue = (v: any): Partial<StyleValue> => v;
 </script>
 <style lang="css" scoped>
 .wrap {

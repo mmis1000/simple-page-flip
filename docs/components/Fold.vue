@@ -68,16 +68,16 @@ const effect = computed(() => {
         <slot></slot>
       </div>
     </div>
-    <div class="fold-half" :style="effect.flipFront as any">
+    <div class="fold-half" :style="effect.flipFront">
       <div class="mask"></div>
     </div>
-    <div class="fold-half" :style="effect.flipShadow as any"></div>
-    <div class="fold-half" :style="effect.flipBack as any">
+    <div class="fold-half" :style="effect.flipShadow"></div>
+    <div class="fold-half" :style="effect.flipBack">
       <div class="item-holder shifted">
         <slot></slot>
       </div>
     </div>
-    <div class="fold-half" :style="effect.flipEffect as any"></div>
+    <div class="fold-half" :style="effect.flipEffect"></div>
   </div>
 </template>
 <style scoped>

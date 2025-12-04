@@ -15,15 +15,17 @@ import {
   intersection,
 } from "./coordinate-utils";
 
+import type * as CSS from 'csstype';
+
 import * as glMatrix from "gl-matrix";
 
 const SHADOW_SIZE_TOLERANCE = 1.3;
 
 export interface EffectStyle {
-  flipFront: Partial<CSSStyleDeclaration>;
-  flipBack: Partial<CSSStyleDeclaration>;
-  flipShadow: Partial<CSSStyleDeclaration>;
-  flipEffect: Partial<CSSStyleDeclaration>;
+  flipFront: CSS.Properties & { [key: `--${string}`]: string };
+  flipBack: CSS.Properties & { [key: `--${string}`]: string } ;
+  flipShadow: CSS.Properties & { [key: `--${string}`]: string } ;
+  flipEffect: CSS.Properties & { [key: `--${string}`]: string } ;
 }
 
 const offsetMatrix = (matrix: glMatrix.mat3, x: number, y: number) => {
