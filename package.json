@@ -1,6 +1,6 @@
 {
   "name": "simple-page-flip",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/simple-page-flip.js",
   "exports": {
