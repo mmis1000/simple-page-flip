@@ -380,7 +380,7 @@ export const getEffectLeft = (
   unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === 0) {
-    return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth);
+    return getEffectLeftTop(width, height, 0, topOffset, maxShadowWidth);
   }
   if (topOffset === 0) {
     return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth);
@@ -529,7 +529,7 @@ export const getEffectRight = (
   unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === width) {
-    return getEffectRightTop(width, height, height, topOffset, maxShadowWidth);
+    return getEffectRightTop(width, height, 0, topOffset, maxShadowWidth);
   }
   if (topOffset === width) {
     return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth);
