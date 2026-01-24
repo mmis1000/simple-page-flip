@@ -380,10 +380,10 @@ export const getEffectLeft = (
   unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === 0) {
-    return getEffectLeftTop(width, height, 0, topOffset, maxShadowWidth);
+    return getEffectLeftTop(width, height, height, topOffset, maxShadowWidth, unit);
   }
   if (topOffset === 0) {
-    return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth);
+    return getEffectLeftBottom(width, height, 0, bottomOffset, maxShadowWidth, unit);
   }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
@@ -529,10 +529,10 @@ export const getEffectRight = (
   unit = "1px"
 ): EffectStyle => {
   if (bottomOffset === width) {
-    return getEffectRightTop(width, height, 0, topOffset, maxShadowWidth);
+    return getEffectRightTop(width, height, height, topOffset, maxShadowWidth, unit);
   }
   if (topOffset === width) {
-    return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth);
+    return getEffectRightBottom(width, height, 0, bottomOffset, maxShadowWidth, unit);
   }
   const posTop = pos(topOffset, 0);
   const posBottom = pos(bottomOffset, height);
@@ -1033,7 +1033,7 @@ export const createEffectLeft = (
           unit
         );
       }
-    } else {
+    } else if (resLeft.pos[1] > resRight.pos[1]) {
       // in / direction
       const p2 = glMatrix.vec2.equals(pos(width, 0), lineStart)
         ? pos(0, height)
@@ -1062,6 +1062,23 @@ export const createEffectLeft = (
           unit
         );
       }
+    } else {
+      // a horizontal line? probably not flip at all?
+      if (resLeft.pos[1] === 0 && resRight.pos[1] === 0) {
+        // ok
+      } else if (resLeft.pos[1] === height && resRight.pos[1] === height) {
+        // also ok
+      } else {
+        console.warn("invalid style result of a horizontal line go though left and right");
+      }
+      return getEffectLeft(
+        width,
+        height,
+        0,
+        0,
+        maxShadowWidth,
+        unit
+      );
     }
   } else if (resLeft?.hitLine1 && resTop?.hitLine1) {
     return getEffectLeftTop(
@@ -1234,7 +1251,7 @@ export const createEffectRight = (
           unit
         );
       }
-    } else {
+    } else if (resLeft.pos[1] < resRight.pos[1]){
       // in / direction
       const p2 = glMatrix.vec2.equals(pos(0, 0), lineStart)
         ? pos(width, height)
@@ -1263,6 +1280,23 @@ export const createEffectRight = (
           unit
         );
       }
+    } else {
+      // a horizontal line? probably not flip at all?
+      if (resLeft.pos[1] === 0 && resRight.pos[1] === 0) {
+        // ok
+      } else if (resLeft.pos[1] === height && resRight.pos[1] === height) {
+        // also ok
+      } else {
+        console.warn("invalid style result of a horizontal line go though left and right");
+      }
+      return getEffectRight(
+          width,
+          height,
+          width,
+          width,
+          maxShadowWidth,
+          unit
+        );
     }
   } else if (resRight?.hitLine1 && resTop?.hitLine1) {
     return getEffectRightTop(
