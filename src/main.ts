@@ -53,6 +53,12 @@ const template = (className: string) => `
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <h1>Flip effects</h1>
+  <p>
+    A simple page flip effect library using CSS 3D transforms and shadows.
+  </p>
+  <p>
+    <a href="./docs/">See the documentation</a>
+  </p>
   <div class="demos">
     <div class="demo">
       <h2>Left top to right bottom only</h2>
@@ -565,3 +571,9 @@ fullExampleFolder
   .add(values, "yPos", 0, 100)
   .name("y pos")
   .onChange(updateDisplayWhenNotAutoPlay);
+
+if (!location.pathname.endsWith("/")) {
+  const newURL = new URL(location.href);
+  newURL.pathname = newURL.pathname + "/";
+  history.replaceState(null, "", newURL.toString());
+}

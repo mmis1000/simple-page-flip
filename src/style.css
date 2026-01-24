@@ -4,6 +4,10 @@ html {
   color: #eee;
 }
 
+a {
+  color: #eee;
+}
+
 .desk {
   padding: 10%;
   overflow: hidden;
